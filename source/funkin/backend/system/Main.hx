@@ -24,7 +24,7 @@ import openfl.utils.AssetLibrary;
 import sys.FileSystem;
 import sys.io.File;
 #if android
-import extension.androidtools.Content;
+import extension.androidtools.content.Content;
 import extension.androidtools.os.Build;
 #end
 
