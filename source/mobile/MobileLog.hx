@@ -1,4 +1,4 @@
-package funkin.mobile.utils;
+package mobile;
 
 import lime.system.System;
 import lime.utils.FileSystem;
