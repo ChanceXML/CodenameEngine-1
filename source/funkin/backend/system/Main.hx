@@ -26,6 +26,8 @@ import sys.io.File;
 #if android
 import extension.androidtools.content.Context;
 import extension.androidtools.os.Build;
+import extension.androidtools.Permissions
+import mobile.MobileLog;
 #end
 
 class Main extends Sprite
@@ -38,9 +40,7 @@ class Main extends Sprite
 	public static var verbose:Bool = false;
 
 	public static var scaleMode:FunkinRatioScaleMode;
-	#if !mobile
 	public static var framerateSprite:Framerate;
-	#end
 
 	var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels).
 	var gameHeight:Int = 720; // Height of the game in pixels (might be less / more in actual pixels).
@@ -67,13 +67,24 @@ class Main extends Sprite
 	{
 		super();
 
+		#if android
+        Permissions.requestPermissions([
+        'android.permission.READ_EXTERNAL_STORAGE',
+        'android.permission.WRITE_EXTERNAL_STORAGE'
+        ]);
+        #end
+			
 		instance = this;
 
 		CrashHandler.init();
 
+		#if android
+		MobileLog.init();
+        trace("Game started");
+		#end
+
 		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, Options.framerate, Options.framerate, skipSplash, startFullscreen));
 
-		#if (!mobile && !web)
 		addChild(framerateSprite = new Framerate());
 		SystemInfo.init();
 		#end
