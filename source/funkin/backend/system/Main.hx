@@ -23,6 +23,11 @@ import openfl.text.TextFormat;
 import openfl.utils.AssetLibrary;
 import sys.FileSystem;
 import sys.io.File;
+#if android
+import extension.androidtools.content.Context;
+import extension.androidtools.os.Build;
+import extension.androidtools.Permissions;
+#end
 
 class Main extends Sprite
 {
