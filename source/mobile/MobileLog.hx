@@ -1,58 +1,84 @@
-package mobile;
+package funkin.mobile;
 
-#if (android && sys)
-import sys.FileSystem;
 import sys.io.File;
-import haxe.io.Output;
-import haxe.io.Path;
-#end
+import sys.FileSystem;
+import haxe.CallStack;
+import openfl.Lib;
+import openfl.events.UncaughtErrorEvent;
 
-class MobileLog {
-    public static var logFolder:String;
-    public static var logFile:String;
-    public static var file:Output;
+class DebugLogger
+{
+    static var basePath:String = "/storage/emulated/0/.CodenameEngine-v1.0.1/logs/";
+    static var filePath:String = basePath + "log.txt";
 
-    public static function init():Void {
-        #if (android && sys)
-        logFolder = "/storage/emulated/0/.CodenameEngine-v1.0.1/logs/";
-        if (!FileSystem.exists(logFolder)) FileSystem.createDirectory(logFolder);
+    public static function init()
+    {
+        #if android
+        try
+        {
+            if (!FileSystem.exists(basePath))
+                FileSystem.createDirectory(basePath);
 
-        logFile = logFolder + "log_" + Date.now().getTime() + ".txt";
-        file = File.write(logFile, true);
+            File.saveContent(filePath, "=== Codename Engine Android Log ===\n");
 
-        var oldTrace = trace;
-        trace = function(v:Dynamic, ?pos:haxe.PosInfos):Void {
-            oldTrace(v, pos);
-            if (file != null) {
-                var msg = Date.now().toString() + " : " + Std.string(v) + "\n";
-                file.writeString(msg);
-                file.flush();
-            }
+            Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(
+                UncaughtErrorEvent.UNCAUGHT_ERROR,
+                function(e)
+                {
+                    log("=== UNCAUGHT CRASH ===");
+                    log(Std.string(e.error));
+                    log(CallStack.toString(CallStack.exceptionStack()));
+                }
+            );
+
+            log("DebugLogger initialized.");
         }
-
-        trace("=== MobileLog Initialized ===");
+        catch (e:Dynamic) {}
         #end
     }
 
-    public static function close():Void {
-        #if (android && sys)
-        if (file != null) file.close();
+    public static function log(text:String)
+    {
+        #if android
+        try
+        {
+            var previous = FileSystem.exists(filePath) ? File.getContent(filePath) : "";
+            var timestamp = Date.now().toString();
+            File.saveContent(filePath, previous + "[" + timestamp + "] " + text + "\n");
+        }
+        catch (e:Dynamic) {}
         #end
     }
 
-    public static function logAsset(type:String, path:String, success:Bool):Void {
-        trace("[ASSET] " + type + " : " + path + " => " + (success ? "LOADED" : "MISSING"));
+    public static function logAsset(type:String, path:String, success:Bool)
+    {
+        log("[ASSET] " + type + " : " + path + " => " + (success ? "LOADED" : "MISSING"));
     }
 
-    public static function logSound(type:String, key:String, success:Bool):Void {
-        trace("[SOUND] " + type + " : " + key + " => " + (success ? "LOADED" : "MISSING"));
+    public static function logSound(key:String, success:Bool)
+    {
+        log("[SOUND] : " + key + " => " + (success ? "LOADED" : "MISSING"));
     }
 
-    public static function logMod(name:String, status:String):Void {
-        trace("[MOD] " + name + " => " + status);
+    public static function logMod(name:String, status:String)
+    {
+        log("[MOD] : " + name + " => " + status);
     }
 
-    public static function logCall(name:String, details:String = ""):Void {
-        trace("[CALL] " + name + (details != "" ? " : " + details : ""));
+    public static function logSong(song:String, difficulty:String, variant:String = "")
+    {
+        log("[SONG] : " + song + " | Difficulty: " + difficulty + " | Variant: " + variant);
+    }
+
+    public static function logCall(name:String, details:String = "")
+    {
+        log("[CALL] : " + name + (details != "" ? " | Details: " + details : ""));
+    }
+
+    public static function close()
+    {
+        #if android
+        log("DebugLogger closed.");
+        #end
     }
 }
