@@ -87,7 +87,6 @@ class Main extends Sprite
 
 		addChild(framerateSprite = new Framerate());
 		SystemInfo.init();
-		#end
 	}
 
 	@:dox(hide)
