@@ -66,22 +66,10 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
-
-		#if android
-        Permissions.requestPermissions([
-        'android.permission.READ_EXTERNAL_STORAGE',
-        'android.permission.WRITE_EXTERNAL_STORAGE'
-        ]);
-        #end
 			
 		instance = this;
 
 		CrashHandler.init();
-
-		#if android
-		DebugLogger.init();
-        DebugLogger.log("Game started");
-		#end
 
 		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, Options.framerate, Options.framerate, skipSplash, startFullscreen));
 
@@ -110,6 +98,16 @@ class Main extends Sprite
 	}
 
 	public static function loadGameSettings() {
+		#if android
+        Permissions.requestPermissions([
+        'android.permission.READ_EXTERNAL_STORAGE',
+        'android.permission.WRITE_EXTERNAL_STORAGE'
+        ]);
+        #end
+		#if android
+		DebugLogger.init();
+        DebugLogger.log("Game started");
+		#end
 		WindowUtils.init();
 		SaveWarning.init();
 		MemoryUtil.init();
