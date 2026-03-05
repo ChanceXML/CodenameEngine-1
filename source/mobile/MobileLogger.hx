@@ -11,43 +11,43 @@ import openfl.events.UncaughtErrorEvent;
 
 class MobileLogger
 {
-	public static var logFolder:String = StorageUtil.getModsPath() + "logs/";
-	public static var logFile:String = logFolder + "log_" + Date.now().getTime() + ".txt";
+	public static var logFolder:String;
+	public static var logFile:String;
 
-	public static function init():Void
-	{
+	static function __init() {
 		#if android || sys
-		if (!FileSystem.exists(logFolder))
-			FileSystem.createDirectory(logFolder);
+		try {
+			logFolder = StorageUtil.getModsPath() + "logs/";
+			if (!FileSystem.exists(logFolder))
+				FileSystem.createDirectory(logFolder);
 
-		File.saveContent(logFile, "=== Codename Engine Verbose Log ===\n");
+			logFile = logFolder + "log_" + Date.now().getTime() + ".txt";
+			File.saveContent(logFile, "=== Codename Engine Verbose Log ===\n");
 
-		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(
-			UncaughtErrorEvent.UNCAUGHT_ERROR,
-			function(e)
-			{
-				log("=== UNCAUGHT ERROR ===");
-				log(Std.string(e.error));
-				log(CallStack.toString(CallStack.exceptionStack()));
-			}
-		);
+			Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(
+				UncaughtErrorEvent.UNCAUGHT_ERROR,
+				function(e) {
+					log("=== UNCAUGHT ERROR ===");
+					log(Std.string(e.error));
+					log(CallStack.toString(CallStack.exceptionStack()));
+				}
+			);
 
-		trace("MobileLogger initialized");
+			log("MobileLogger initialized");
+		} catch(e:Dynamic) {}
 		#end
 	}
 
-	public static function log(text:String):Void
-	{
+	public static function log(text:String):Void {
 		#if android || sys
-		try
-		{
+		try {
+			if (logFile == null) return;
 			var previous:String = FileSystem.exists(logFile) ? File.getContent(logFile) : "";
 			var timestamp:String = Date.now().toString();
 			var msg:String = "[" + timestamp + "] " + text + "\n";
 			File.saveContent(logFile, previous + msg);
-			trace(msg); // also output to console
-		}
-		catch (e:Dynamic) {}
+			trace(msg);
+		} catch(e:Dynamic) {}
 		#end
 	}
 
@@ -58,7 +58,7 @@ class MobileLogger
 		log("[SOUND] : " + key + " => " + (success ? "LOADED" : "MISSING"));
 
 	public static function logMod(name:String, status:String):Void
-		log("[MOD] : " + name + " => " + status);
+		log("[MOD] : " + name + " => " + status");
 
 	public static function logCall(name:String, details:String = ""):Void
 		log("[CALL] : " + name + (details != "" ? " | Details: " + details : ""));
@@ -67,9 +67,7 @@ class MobileLogger
 		log("[SONG] : " + song + " | Difficulty: " + difficulty + " | Variant: " + variant);
 
 	public static function close():Void
-	{
 		#if android || sys
 		log("MobileLogger closed");
 		#end
-	}
 }
