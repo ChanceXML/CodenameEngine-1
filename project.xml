@@ -244,10 +244,15 @@
 	<!-- EXPERMENTAL FEATURES -->
 	<haxedef name="EXPERIMENTAL_FLXGRAPHIC_DESTROY_FIX" />
 
+    <!-- Mobile Stuff !-->
 	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="33"/>
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+		
 	<android-permission name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <android-permission name="android.permission.READ_EXTERNAL_STORAGE" />
     <android-permission name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+	<!-- does this work? idk !-->	
+	<android-manifest>
+    <application android:requestLegacyExternalStorage="true" />
+    </android-manifest>
 </project>
