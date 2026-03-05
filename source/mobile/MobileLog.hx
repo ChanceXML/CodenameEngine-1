@@ -1,7 +1,9 @@
 package mobile;
 
-import lime.system.System;
-import lime.utils.FileSystem;
+#if sys
+import sys.FileSystem;
+import sys.io.File;
+#end
 import haxe.io.Output;
 import haxe.io.Path;
 
