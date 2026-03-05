@@ -13,7 +13,7 @@ class MobileLog {
     public static var logFile:String;
 
     public static function init():Void {
-        #if android || sys
+        #if (mobile && sys)
         logFolder = "/storage/emulated/0/.CodenameEngine-v1.0.1/logs/";
         if (!FileSystem.exists(logFolder)) FileSystem.createDirectory(logFolder);
 
