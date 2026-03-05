@@ -4,54 +4,47 @@ package mobile;
 import sys.FileSystem;
 import sys.io.File;
 #end
-import haxe.io.Output;
+import haxe.Log;
+import haxe.PosInfos;
 import haxe.io.Path;
 
 class MobileLog {
     public static var logFolder:String;
     public static var logFile:String;
-    public static var file:Output;
 
     public static function init():Void {
-        #if android
+        #if android || sys
         logFolder = "/storage/emulated/0/.CodenameEngine-v1.0.1/logs/";
         if (!FileSystem.exists(logFolder)) FileSystem.createDirectory(logFolder);
 
         logFile = logFolder + "log_" + Date.now().getTime() + ".txt";
-        file = sys.io.File.write(logFile, true);
 
-        var oldTrace = trace;
-        trace = function(v:Dynamic, ?pos:PosInfos):Void {
-            oldTrace(v, pos);
-            if (file != null) {
-                file.writeString(Date.now().toString() + " : " + Std.string(v) + "\n");
-                file.flush();
+        Log.trace = function(v:Dynamic, pos:PosInfos):Void {
+            var msg = Date.now().toString() + " : " + Std.string(v);
+            try {
+                File.append(logFile, msg + "\n");
+            } catch(e:Dynamic) {
             }
+            haxe.Log.print(msg, pos);
         }
 
-        trace("=== MobileLog Initialized ===");
-        #end
-    }
-
-    public static function close():Void {
-        #if android
-        if (file != null) file.close();
+        Log.trace("=== MobileLog Initialized ===");
         #end
     }
 
     public static function logAsset(type:String, path:String, success:Bool):Void {
-        trace("[ASSET] " + type + " : " + path + " => " + (success ? "LOADED" : "MISSING"));
+        Log.trace("[ASSET] " + type + " : " + path + " => " + (success ? "LOADED" : "MISSING"));
     }
 
     public static function logSound(type:String, key:String, success:Bool):Void {
-        trace("[SOUND] " + type + " : " + key + " => " + (success ? "LOADED" : "MISSING"));
+        Log.trace("[SOUND] " + type + " : " + key + " => " + (success ? "LOADED" : "MISSING"));
     }
 
     public static function logMod(name:String, status:String):Void {
-        trace("[MOD] " + name + " => " + status);
+        Log.trace("[MOD] " + name + " => " + status);
     }
-  
+
     public static function logCall(name:String, details:String = ""):Void {
-        trace("[CALL] " + name + (details != "" ? " : " + details : ""));
+        Log.trace("[CALL] " + name + (details != "" ? " : " + details : ""));
     }
 }
