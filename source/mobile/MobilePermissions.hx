@@ -1,3 +1,5 @@
+package mobile;
+
 #if android
 import extension.androidtools.os.Build.VERSION as AndroidVersion;
 import extension.androidtools.os.Build.VERSION_CODES as AndroidVersionCode;
