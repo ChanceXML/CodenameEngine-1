@@ -23,12 +23,6 @@ import openfl.text.TextFormat;
 import openfl.utils.AssetLibrary;
 import sys.FileSystem;
 import sys.io.File;
-#if android
-import extension.androidtools.content.Context;
-import extension.androidtools.os.Build;
-import extension.androidtools.Permissions;
-import mobile.MobileLog;
-#end
 
 class Main extends Sprite
 {
@@ -98,16 +92,6 @@ class Main extends Sprite
 	}
 
 	public static function loadGameSettings() {
-		#if android
-        Permissions.requestPermissions([
-        'android.permission.READ_EXTERNAL_STORAGE',
-        'android.permission.WRITE_EXTERNAL_STORAGE'
-        ]);
-        #end
-		#if android
-		DebugLogger.init();
-        DebugLogger.log("Game started");
-		#end
 		WindowUtils.init();
 		SaveWarning.init();
 		MemoryUtil.init();
