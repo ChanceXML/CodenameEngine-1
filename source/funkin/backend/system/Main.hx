@@ -79,8 +79,8 @@ class Main extends Sprite
 		CrashHandler.init();
 
 		#if android
-		MobileLog.init();
-        trace("Game started");
+		DebugLogger.init();
+        DebugLogger.log("Game started");
 		#end
 
 		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, Options.framerate, Options.framerate, skipSplash, startFullscreen));
