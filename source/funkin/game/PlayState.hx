@@ -35,7 +35,7 @@ import funkin.menus.*;
 import funkin.backend.week.WeekData;
 import funkin.savedata.FunkinSave;
 import haxe.io.Path;
-import mobile.controls.MobileHitbox;
+import mobile.controls.Hitbox;
 
 using StringTools;
 
@@ -896,7 +896,14 @@ class PlayState extends MusicBeatState
 		startingSong = true;
 
 		#if android
-        addMobileHitbox(true);
+        add(new Hitbox());
+        #end
+
+		#if android
+        if (Hitbox.LEFT) noteLeft();
+        if (Hitbox.DOWN) noteDown();
+        if (Hitbox.UP) noteUp();
+        if (Hitbox.RIGHT) noteRight();
         #end
 
 		super.create();
