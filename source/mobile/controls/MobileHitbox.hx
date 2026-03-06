@@ -1,63 +1,54 @@
 package mobile.controls;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.group.FlxGroup;
-import flixel.FlxState;
-import flixel.input.touch.FlxTouch;
+import flixel.util.FlxRect;
+import flixel.math.FlxPoint;
 
 class Hitbox extends FlxGroup
 {
-    var boxes:Array<FlxSprite>;
+    var left:FlxRect;
+    var down:FlxRect;
+    var up:FlxRect;
+    var right:FlxRect;
+
+    public static var LEFT:Bool = false;
+    public static var DOWN:Bool = false;
+    public static var UP:Bool = false;
+    public static var RIGHT:Bool = false;
 
     public function new()
     {
         super();
 
-        boxes = [];
+        var w = FlxG.width / 4;
 
-        var w:Int = Std.int(FlxG.width / 4);
-        var h:Int = FlxG.height;
-
-        for (i in 0...4)
-        {
-            var box = new FlxSprite(i * w, 0);
-            box.makeGraphic(w, h, 0xFFFFFFFF);
-            box.alpha = 0.2;
-            boxes.push(box);
-            add(box);
-        }
-
-        var hint = new FlxSprite(0,0,"assets/images/mobile/hitbox_hint.png");
-        hint.setGraphicSize(FlxG.width, FlxG.height);
-        hint.updateHitbox();
-        hint.alpha = 0.8;
-        add(hint);
+        left  = new FlxRect(0, 0, w, FlxG.height);
+        down  = new FlxRect(w, 0, w, FlxG.height);
+        up    = new FlxRect(w * 2, 0, w, FlxG.height);
+        right = new FlxRect(w * 3, 0, w, FlxG.height);
     }
 
-    override public function update(elapsed:Float)
+    override function update(elapsed:Float)
     {
         super.update(elapsed);
 
+        LEFT = false;
+        DOWN = false;
+        UP = false;
+        RIGHT = false;
+
         for (touch in FlxG.touches.list)
         {
-            var pos = touch.getScreenPosition();
+            if (touch.pressed)
+            {
+                var pos:FlxPoint = touch.getWorldPosition();
 
-            if (boxes[0].overlapsPoint(pos)) FlxG.keys.press("LEFT");
-            if (boxes[1].overlapsPoint(pos)) FlxG.keys.press("DOWN");
-            if (boxes[2].overlapsPoint(pos)) FlxG.keys.press("UP");
-            if (boxes[3].overlapsPoint(pos)) FlxG.keys.press("RIGHT");
-        }
-    }
-}
-
-class MobileHitbox
-{
-    public static function addMobileHitbox(state:FlxState, enabled:Bool)
-    {
-        if(enabled)
-        {
-            state.add(new Hitbox());
+                if (left.containsPoint(pos)) LEFT = true;
+                if (down.containsPoint(pos)) DOWN = true;
+                if (up.containsPoint(pos)) UP = true;
+                if (right.containsPoint(pos)) RIGHT = true;
+            }
         }
     }
 }
