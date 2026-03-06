@@ -43,6 +43,13 @@ class Hitbox extends FlxGroup
         add(downHint);
         add(upHint);
         add(rightHint);
+
+        var hint = new FlxSprite(0, 0);
+        hint.loadGraphic("assets/images/mobile/hitbox_hint.png");
+        hint.setGraphicSize(FlxG.width, FlxG.height);
+        hint.updateHitbox();
+        hint.alpha = 0.8;
+        add(hint);
     }
 
     function makeHint(x:Float, y:Float, w:Float, h:Float, color:Int):FlxSprite
