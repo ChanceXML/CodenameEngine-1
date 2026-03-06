@@ -899,13 +899,6 @@ class PlayState extends MusicBeatState
         add(new Hitbox());
         #end
 
-		#if android
-        if (Hitbox.LEFT) noteLeft();
-        if (Hitbox.DOWN) noteDown();
-        if (Hitbox.UP) noteUp();
-        if (Hitbox.RIGHT) noteRight();
-        #end
-
 		super.create();
 
 		for(s in introSprites)
@@ -1087,6 +1080,13 @@ class PlayState extends MusicBeatState
 		updateDiscordPresence();
 
 		gameAndCharsCall("onStartSong");
+
+		#if android
+        if (Hitbox.LEFT) controls.LEFT = true;
+        if (Hitbox.DOWN) controls.DOWN = true;
+        if (Hitbox.UP) controls.UP = true;
+        if (Hitbox.RIGHT) controls.RIGHT = true;
+        #end
 	}
 
 	public override function destroy() {
