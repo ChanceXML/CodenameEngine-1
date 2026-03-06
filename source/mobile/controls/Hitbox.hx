@@ -2,67 +2,70 @@ package mobile.controls;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.input.touch.FlxTouch;
 import flixel.group.FlxGroup;
+import flixel.FlxState;
 
-class Hitbox extends FlxGroup {
-    public static var hitbox:hitbox = new hitbox();
+class Hitbox extends FlxGroup
+{
+	public var boxes:Array<FlxSprite>;
+	public var hint:FlxSprite;
 
-    public var hitboxes:Array<FlxSprite>;
-    public var hintImage:FlxSprite;
+	public function new()
+	{
+		super();
 
-    public function new() {
-        super();
-        hitboxes = [];
-        setupHitboxes();
-        setupHintImage();
-    }
+		boxes = [];
 
-    private function setupHitboxes():Void {
-        var hitWidth = 480;
-        var hitHeight = 1080;
-        var yPos = 0;
+		var hitWidth:Int = 480;
+		var hitHeight:Int = 1080;
 
-        for (i in 0...4) {
-            var box = new FlxSprite(i * hitWidth, yPos);
-            box.makeGraphic(hitWidth, hitHeight, 0x00000000);
-            box.alpha = 0.2;
-            hitboxes.push(box);
-            add(box);
-        }
-    }
+		for (i in 0...4)
+		{
+			var box = new FlxSprite(i * hitWidth, 0);
+			box.makeGraphic(hitWidth, hitHeight, 0x33FFFFFF);
+			box.alpha = 0.2;
+			box.scrollFactor.set();
 
-    private function setupHintImage():Void {
-        hintImage = new FlxSprite(0, 0, "assets/images/mobile/hitbox_hint.png");
-        hintImage.setGraphicSize(1280, 720);
-        hintImage.updateHitbox();
-        hintImage.alpha = 0.8;
-        add(hintImage);
-    }
+			boxes.push(box);
+			add(box);
+		}
 
-    override public function update(elapsed:Float):Void {
-        super.update(elapsed);
-        handleTouches();
-    }
+		hint = new FlxSprite(0,0);
+		hint.loadGraphic("assets/images/mobile/hitbox_hint.png");
+		hint.setGraphicSize(1280,720);
+		hint.updateHitbox();
+		hint.scrollFactor.set();
+		add(hint);
+	}
 
-    private function handleTouches():Void {
-        for (i in 0...hitboxes.length) sendInput(i, false);
+	override function update(elapsed:Float)
+	{
+		super.update(elapsed);
 
-        for (touch in FlxG.touches.list) {
-            for (i in 0...hitboxes.length) {
-                if (hitboxes[i].overlapsPoint(touch.screenPosition)) {
-                    sendInput(i, true);
-                }
-            }
-        }
-    }
+		FlxG.keys.pressed.LEFT = false;
+		FlxG.keys.pressed.DOWN = false;
+		FlxG.keys.pressed.UP = false;
+		FlxG.keys.pressed.RIGHT = false;
 
-    private function sendInput(index:Int, pressed:Bool):Void {
-        switch(index) {
-            case 0: FlxG.keys.setPressed("LEFT", pressed);
-            case 1: FlxG.keys.setPressed("DOWN", pressed);
-            case 2: FlxG.keys.setPressed("UP", pressed);
-            case 3: FlxG.keys.setPressed("RIGHT", pressed);
-        }
-    }
+		for (touch in FlxG.touches.list)
+		{
+			if (boxes[0].overlapsPoint(touch.screenPosition))
+				FlxG.keys.pressed.LEFT = true;
+
+			if (boxes[1].overlapsPoint(touch.screenPosition))
+				FlxG.keys.pressed.DOWN = true;
+
+			if (boxes[2].overlapsPoint(touch.screenPosition))
+				FlxG.keys.pressed.UP = true;
+
+			if (boxes[3].overlapsPoint(touch.screenPosition))
+				FlxG.keys.pressed.RIGHT = true;
+		}
+	}
+}
+
+function addMobile(c:Class<Dynamic>)
+{
+	var obj = Type.createInstance(c, []);
+	FlxG.state.add(obj);
 }
