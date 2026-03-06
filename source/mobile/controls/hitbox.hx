@@ -24,6 +24,7 @@ class hitbox extends FlxGroup {
         for (i in 0...4) {
             var box = new FlxSprite(i * hitWidth, yPos);
             box.makeGraphic(hitWidth, hitHeight, 0x00000000);
+            box.setAlpha(0.2)
             hitboxes.push(box);
             add(box);
         }
@@ -32,7 +33,7 @@ class hitbox extends FlxGroup {
     private function setupHintImage():Void {
         hintImage = new FlxSprite(0, 0, "assets/images/mobile/hitbox_hint.png");
         hintImage.setSize(1280, 720); 
-        hintImage.alpha = 0.5;       
+        hintImage.alpha = 0.8;       
         add(hintImage);       
     }
 
