@@ -6,6 +6,8 @@ import flixel.input.touch.FlxTouch;
 import flixel.group.FlxGroup;
 
 class hitbox extends FlxGroup {
+    public static var hitbox:hitbox = new hitbox();
+
     public var hitboxes:Array<FlxSprite>;
     public var hintImage:FlxSprite;
 
@@ -24,7 +26,7 @@ class hitbox extends FlxGroup {
         for (i in 0...4) {
             var box = new FlxSprite(i * hitWidth, yPos);
             box.makeGraphic(hitWidth, hitHeight, 0x00000000);
-            box.setAlpha(0.2);
+            box.alpha = 0.2;
             hitboxes.push(box);
             add(box);
         }
@@ -32,9 +34,10 @@ class hitbox extends FlxGroup {
 
     private function setupHintImage():Void {
         hintImage = new FlxSprite(0, 0, "assets/images/mobile/hitbox_hint.png");
-        hintImage.setSize(1280, 720); 
-        hintImage.alpha = 0.8;       
-        add(hintImage);       
+        hintImage.setGraphicSize(1280, 720);
+        hintImage.updateHitbox();
+        hintImage.alpha = 0.8;
+        add(hintImage);
     }
 
     override public function update(elapsed:Float):Void {
@@ -48,7 +51,7 @@ class hitbox extends FlxGroup {
         for (touch in FlxG.touches.list) {
             for (i in 0...hitboxes.length) {
                 if (hitboxes[i].overlapsPoint(touch.screenPosition)) {
-                    sendInput(i, true); 
+                    sendInput(i, true);
                 }
             }
         }
