@@ -5,7 +5,7 @@ import flixel.FlxSprite;
 import flixel.input.touch.FlxTouch;
 import flixel.group.FlxGroup;
 
-class MobileHitboxes extends FlxGroup {
+class hitboxes extends FlxGroup {
     public var hitboxes:Array<FlxSprite>;
     public var noteImage:FlxSprite;
 
