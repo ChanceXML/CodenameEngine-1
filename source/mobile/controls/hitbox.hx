@@ -24,7 +24,7 @@ class hitbox extends FlxGroup {
         for (i in 0...4) {
             var box = new FlxSprite(i * hitWidth, yPos);
             box.makeGraphic(hitWidth, hitHeight, 0x00000000);
-            box.setAlpha(0.2)
+            box.setAlpha(0.2);
             hitboxes.push(box);
             add(box);
         }
