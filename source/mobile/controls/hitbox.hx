@@ -30,7 +30,7 @@ class hitbox extends FlxGroup {
     }
 
     private function setupHintImage():Void {
-        hintImage = new FlxSprite(0, 0, "assets/images/hitbox_hint.png");
+        hintImage = new FlxSprite(0, 0, "assets/images/mobile/hitbox_hint.png");
         hintImage.setSize(1280, 720); 
         hintImage.alpha = 0.5;       
         add(hintImage);       
