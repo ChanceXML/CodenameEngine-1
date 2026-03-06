@@ -664,8 +664,7 @@ class PlayState extends MusicBeatState
 		Note.__customNoteTypeExists = [];
 
         #if android
-        var mobileHitbox:hitbox = new hitbox();
-        add(mobileHitbox);
+        add(hitbox.hitbox);
         #end
 
 		// SCRIPTING & DATA INITIALIZATION
