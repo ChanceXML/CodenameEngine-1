@@ -896,7 +896,7 @@ class PlayState extends MusicBeatState
 		startingSong = true;
 
 		#if android
-        addMobile(Hitbox);
+        addMobileHitbox(true);
         #end
 
 		super.create();
