@@ -35,7 +35,7 @@ import funkin.menus.*;
 import funkin.backend.week.WeekData;
 import funkin.savedata.FunkinSave;
 import haxe.io.Path;
-import mobile.controls.hitbox;
+import mobile.controls.Hitbox;
 
 using StringTools;
 
@@ -664,7 +664,7 @@ class PlayState extends MusicBeatState
 		Note.__customNoteTypeExists = [];
 
         #if android
-        add(hitbox.hitbox);
+        add(Hitbox.hitbox);
         #end
 
 		// SCRIPTING & DATA INITIALIZATION
