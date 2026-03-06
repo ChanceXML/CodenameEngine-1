@@ -2,15 +2,21 @@ package mobile.controls;
 
 import flixel.FlxG;
 import flixel.group.FlxGroup;
-import flixel.util.FlxRect;
+import flixel.FlxSprite;
+import flixel.math.FlxRect;
 import flixel.math.FlxPoint;
 
 class Hitbox extends FlxGroup
 {
-    var left:FlxRect;
-    var down:FlxRect;
-    var up:FlxRect;
-    var right:FlxRect;
+    var leftRect:FlxRect;
+    var downRect:FlxRect;
+    var upRect:FlxRect;
+    var rightRect:FlxRect;
+
+    var leftHint:FlxSprite;
+    var downHint:FlxSprite;
+    var upHint:FlxSprite;
+    var rightHint:FlxSprite;
 
     public static var LEFT:Bool = false;
     public static var DOWN:Bool = false;
@@ -23,20 +29,41 @@ class Hitbox extends FlxGroup
 
         var w = FlxG.width / 4;
 
-        left  = new FlxRect(0, 0, w, FlxG.height);
-        down  = new FlxRect(w, 0, w, FlxG.height);
-        up    = new FlxRect(w * 2, 0, w, FlxG.height);
-        right = new FlxRect(w * 3, 0, w, FlxG.height);
+        leftRect  = new FlxRect(0, 0, w, FlxG.height);
+        downRect  = new FlxRect(w, 0, w, FlxG.height);
+        upRect    = new FlxRect(w * 2, 0, w, FlxG.height);
+        rightRect = new FlxRect(w * 3, 0, w, FlxG.height);
+
+        leftHint  = makeHint(0, 0, w, FlxG.height, 0xFFFF0000);
+        downHint  = makeHint(w, 0, w, FlxG.height, 0xFF00FFFF);
+        upHint    = makeHint(w * 2, 0, w, FlxG.height, 0xFF00FF00);
+        rightHint = makeHint(w * 3, 0, w, FlxG.height, 0xFFFFFF00);
+
+        add(leftHint);
+        add(downHint);
+        add(upHint);
+        add(rightHint);
+    }
+
+    function makeHint(x:Float, y:Float, w:Float, h:Float, color:Int):FlxSprite
+    {
+        var s = new FlxSprite(x, y);
+        s.makeGraphic(Std.int(w), Std.int(h), color);
+        s.alpha = 0;
+        s.scrollFactor.set();
+        return s;
     }
 
     override function update(elapsed:Float)
     {
         super.update(elapsed);
 
-        LEFT = false;
-        DOWN = false;
-        UP = false;
-        RIGHT = false;
+        LEFT = DOWN = UP = RIGHT = false;
+
+        leftHint.alpha = 0;
+        downHint.alpha = 0;
+        upHint.alpha = 0;
+        rightHint.alpha = 0;
 
         for (touch in FlxG.touches.list)
         {
@@ -44,10 +71,29 @@ class Hitbox extends FlxGroup
             {
                 var pos:FlxPoint = touch.getWorldPosition();
 
-                if (left.containsPoint(pos)) LEFT = true;
-                if (down.containsPoint(pos)) DOWN = true;
-                if (up.containsPoint(pos)) UP = true;
-                if (right.containsPoint(pos)) RIGHT = true;
+                if (leftRect.containsPoint(pos))
+                {
+                    LEFT = true;
+                    leftHint.alpha = 0.2;
+                }
+
+                if (downRect.containsPoint(pos))
+                {
+                    DOWN = true;
+                    downHint.alpha = 0.2;
+                }
+
+                if (upRect.containsPoint(pos))
+                {
+                    UP = true;
+                    upHint.alpha = 0.2;
+                }
+
+                if (rightRect.containsPoint(pos))
+                {
+                    RIGHT = true;
+                    rightHint.alpha = 0.2;
+                }
             }
         }
     }
