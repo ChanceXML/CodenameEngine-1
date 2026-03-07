@@ -14,13 +14,13 @@ class HitBox extends FlxSpriteGroup {
     public function new() {
         super();
 
-        var w:Int = 480; 
-        var h:Int = 1080;
+        var w:Int = 320; 
+        var h:Int = 720;
 
         add(buttonLeft  = new HitboxButton(0, 0, w, h, 0xFFC24B99));
-        add(buttonDown  = new HitboxButton(480, 0, w, h, 0xFF00FFFF));
-        add(buttonUp    = new HitboxButton(960, 0, w, h, 0xFF12FA05));
-        add(buttonRight = new HitboxButton(1440, 0, w, h, 0xFFF9393F));
+        add(buttonDown  = new HitboxButton(320, 0, w, h, 0xFF00FFFF));
+        add(buttonUp    = new HitboxButton(640, 0, w, h, 0xFF12FA05));
+        add(buttonRight = new HitboxButton(960, 0, w, h, 0xFFF9393F));
         
         scrollFactor.set();
     }
@@ -62,10 +62,13 @@ class HitboxButton extends FlxSprite {
         if (FlxG.mouse.overlaps(this) && FlxG.mouse.pressed) isPressed = true;
         #end
 
-        if (isPressed && !_wasPressed && onDown.callback != null) onDown.callback();
-        if (!isPressed && _wasPressed && onUp.callback != null) onUp.callback();
-
-        alpha = isPressed ? 0.25 : 0.00001;
+        if (isPressed && !_wasPressed) {
+            alpha = 0.25;
+            if (onDown.callback != null) onDown.callback();
+        } else if (!isPressed && _wasPressed) {
+            alpha = 0.00001;
+            if (onUp.callback != null) onUp.callback();
+        }
 
         super.update(elapsed);
     }
