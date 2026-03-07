@@ -35,6 +35,7 @@ import funkin.menus.*;
 import funkin.backend.week.WeekData;
 import funkin.savedata.FunkinSave;
 import haxe.io.Path;
+import mobile.controls.HitBox
 
 using StringTools;
 
@@ -46,6 +47,8 @@ class PlayState extends MusicBeatState
 	 * Current PlayState instance.
 	 */
 	public static var instance:PlayState = null;
+
+	var hitbox:HitBox;
 
 	/**
 	 * SONG DATA (Chart, Metadata).
@@ -661,6 +664,21 @@ class PlayState extends MusicBeatState
 	@:dox(hide) override public function create()
 	{
 		Note.__customNoteTypeExists = [];
+
+		hitbox = new HitBox();
+        add(hitbox);
+
+		var hitbox:HitBox;
+
+        hitbox.buttonLeft.onDown.add(() -> {   FlxG.keys.handleAction(LEFT, true); });
+        hitbox.buttonDown.onDown.add(() -> { FlxG.keys.handleAction(DOWN, true); });
+        hitbox.buttonUp.onDown.add(() -> { FlxG.keys.handleAction(UP, true); });
+        hitbox.buttonRight.onDown.add(() -> { FlxG.keys.handleAction(RIGHT, true); });
+
+        hitbox.buttonLeft.onUp.add(() -> { FlxG.keys.handleAction(LEFT, false); });
+        hitbox.buttonDown.onUp.add(() -> { FlxG.keys.handleAction(DOWN, false); });
+        hitbox.buttonUp.onUp.add(() -> { FlxG.keys.handleAction(UP, false); });
+        hitbox.buttonRight.onUp.add(() -> { FlxG.keys.handleAction(RIGHT, false); });		
 
 		// SCRIPTING & DATA INITIALIZATION
 		#if REGION
