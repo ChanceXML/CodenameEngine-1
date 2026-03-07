@@ -18,10 +18,10 @@ class HitBox extends FlxSpriteGroup {
         var w:Int = 320; 
         var h:Int = 720;
 
-        add(buttonLeft  = new HitboxButton(0, 0, w, h, 0xFFC24B99));
-        add(buttonDown  = new HitboxButton(320, 0, w, h, 0xFF00FFFF));
-        add(buttonUp    = new HitboxButton(640, 0, w, h, 0xFF12FA05));
-        add(buttonRight = new HitboxButton(960, 0, w, h, 0xFFF9393F));
+        add(buttonLeft  = new HitboxButton(0, 720, w, h, 0xFFC24B99));
+        add(buttonDown  = new HitboxButton(320, 720, w, h, 0xFF00FFFF));
+        add(buttonUp    = new HitboxButton(640, 720, w, h, 0xFF12FA05));
+        add(buttonRight = new HitboxButton(960, 720, w, h, 0xFFF9393F));
         
         scrollFactor.set();
     }
