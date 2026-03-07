@@ -4,8 +4,7 @@ import flixel.FlxG;
 import flixel.group.FlxSpriteGroup;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
-import mobile.controls.TouchInput;
-import funkin.game.PlayState;
+import mobile.backend.TouchInput;
 
 class Hitbox extends FlxSpriteGroup {
     public var hitboxes:Array<FlxSprite> = [];
@@ -22,9 +21,7 @@ class Hitbox extends FlxSpriteGroup {
         }
 
         createHitboxes();
-
-        if (PlayState.instance != null)
-            PlayState.instance.onStep.add(() -> updateHitboxes());
+        scrollFactor.set();
     }
 
     function createHitboxes():Void {
@@ -45,7 +42,6 @@ class Hitbox extends FlxSpriteGroup {
             var hb = hitboxes[i];
             if (TouchInput.pressed(hb)) {
                 hb.alpha = 0.25;
-                PlayState.instance.keyShit(i);
             } else {
                 hb.alpha = 0;
             }
