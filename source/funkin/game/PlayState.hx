@@ -1396,7 +1396,8 @@ class PlayState extends MusicBeatState
 			return;
 		}
 
-		if (mobileControls != null) {
+	 if (mobileControls != null) 
+	  { 
         if (mobileControls.leftPressed) controls.NOTE_LEFT = true;
         if (mobileControls.downPressed) controls.NOTE_DOWN = true;
         if (mobileControls.upPressed) controls.NOTE_UP = true;
@@ -1407,7 +1408,6 @@ class PlayState extends MusicBeatState
         if (mobileControls.upJustPressed) controls.NOTE_UP_P = true;
         if (mobileControls.rightJustPressed) controls.NOTE_RIGHT_P = true;
     }
- } 
 
 		if (updateRatingStuff != null)
 			updateRatingStuff();
