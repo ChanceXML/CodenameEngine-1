@@ -49,6 +49,9 @@ class PlayState extends MusicBeatState
 	 */
 	public static var instance:PlayState = null;
 
+	public var mobileControls:mobile.controls.Hitbox;
+    public var hint:flixel.FlxSprite;
+	
 	/**
 	 * SONG DATA (Chart, Metadata).
 	 */
@@ -1077,9 +1080,6 @@ class PlayState extends MusicBeatState
 		updateDiscordPresence();
 
 		gameAndCharsCall("onStartSong");
-		
-        var mobileControls:mobile.controls.Hitbox;
-        var hint:flixel.FlxSprite;
 
 		hint = new flixel.FlxSprite(0, 0).loadGraphic(Paths.image('assets/images/mobile/hitbox_hint'));
         hint.cameras = [camHUD];
