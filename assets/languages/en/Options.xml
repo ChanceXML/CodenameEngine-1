@@ -27,8 +27,8 @@
 		<str id="optionsTree.debug-name">Debug Options</str>
 		<str id="optionsTree.debug-desc">Debug Options for Developer Mode.</str>
 
-		<string id="optionsTree.android-name">Android Options</string>
-        <string id="optionsTree.android-desc">Configure mobile-specific stuff.</string>
+		<str id="optionsTree.android-name">Android Options</str>
+        <str id="optionsTree.android-desc">Configure mobile-specific stuff.</str>
 	</group>
 
 	<group name="KeybindOptions" prefix="KeybindsOptions.">
