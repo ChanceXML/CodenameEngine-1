@@ -1,6 +1,5 @@
 package mobile.controls;
 
-#if android
 import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.FlxSprite;
@@ -11,6 +10,7 @@ import funkins.game.PlayState;
 
 class Hitbox : FlxGroup
 {
+    #if android
     var hintBG:FlxSprite;
 
     var leftRect:FlxSprite;
@@ -22,17 +22,18 @@ class Hitbox : FlxGroup
     public var downTurbo:TurboKeys;
     public var upTurbo:TurboKeys;
     public var rightTurbo:TurboKeys;
+    #end
 
     public function new()
     {
         super();
 
+        #if android
         var w = FlxG.width / 4;
         var h = FlxG.height;
 
         hintBG = new FlxSprite(0, 0, "assets/images/mobile/hitbox_hint.png");
         hintBG.setGraphicSize(FlxG.width, FlxG.height);
-        hintBG.cameras = [FlxG.cameraManager.getCamera("camHUD")];
         add(hintBG);
 
         leftRect  = makeRect(0, 0, w, h, 0x80FF0000);
@@ -49,8 +50,10 @@ class Hitbox : FlxGroup
         downTurbo  = new TurboKeys([FlxKey.DOWN]);
         upTurbo    = new TurboKeys([FlxKey.UP]);
         rightTurbo = new TurboKeys([FlxKey.RIGHT]);
+        #end
     }
 
+    #if android
     function makeRect(x:Float, y:Float, w:Float, h:Float, color:Int):FlxSprite
     {
         var s = new FlxSprite(x, y);
@@ -58,7 +61,6 @@ class Hitbox : FlxGroup
         s.alpha = 0;
         s.immovable = true;
         s.moves = false;
-        s.cameras = [FlxG.cameraManager.getCamera("camHUD")];
         return s;
     }
 
@@ -74,7 +76,6 @@ class Hitbox : FlxGroup
         for (touch in FlxG.touches.list)
         {
             if (!touch.pressed) continue;
-
             var pos:FlxPoint = touch.getScreenPosition();
 
             if (leftRect.overlapsPoint(pos))
@@ -106,5 +107,5 @@ class Hitbox : FlxGroup
             }
         }
     }
+    #end
 }
-#end
