@@ -1,30 +1,32 @@
 package mobile.controls;
 
 #if android
-import funkin.backend.TurboControls.TurboKeys;
-import flixel.input.keyboard.FlxKey;
 import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
-import funkin.game.PlayState;
+import funkins.backend.TurboControls;
+import funkins.backend.system.Control;
+import funkins.options.PlayerSettings;
+import funkins.game.PlayState;
 
-class Hitbox extends FlxGroup {
+class Hitbox extends FlxGroup
+{
     var hintBG:FlxSprite;
+
     var leftRect:FlxSprite;
     var downRect:FlxSprite;
     var upRect:FlxSprite;
     var rightRect:FlxSprite;
 
-    public var leftTurbo:TurboKeys;
-    public var downTurbo:TurboKeys;
-    public var upTurbo:TurboKeys;
-    public var rightTurbo:TurboKeys;
+    public var leftTurbo:TurboControls;
+    public var downTurbo:TurboControls;
+    public var upTurbo:TurboControls;
+    public var rightTurbo:TurboControls;
 
     public function new()
     {
         super();
-
         var w = FlxG.width / 4;
         var h = FlxG.height;
 
@@ -42,17 +44,17 @@ class Hitbox extends FlxGroup {
         add(upRect);
         add(rightRect);
 
-        leftTurbo  = new TurboKeys([FlxKey.LEFT]);
-        downTurbo  = new TurboKeys([FlxKey.DOWN]);
-        upTurbo    = new TurboKeys([FlxKey.UP]);
-        rightTurbo = new TurboKeys([FlxKey.RIGHT]);
+        leftTurbo  = new TurboControls([PlayerSettings.solo.controls.LEFT]);
+        downTurbo  = new TurboControls([PlayerSettings.solo.controls.DOWN]);
+        upTurbo    = new TurboControls([PlayerSettings.solo.controls.UP]);
+        rightTurbo = new TurboControls([PlayerSettings.solo.controls.RIGHT]);
     }
 
     function makeRect(x:Float, y:Float, w:Float, h:Float, color:Int):FlxSprite
     {
         var s = new FlxSprite(x, y);
         s.makeGraphic(Std.int(w), Std.int(h), color);
-        s.alpha = 0;
+        s.alpha = 0.2;
         s.immovable = true;
         s.moves = false;
         return s;
@@ -61,11 +63,10 @@ class Hitbox extends FlxGroup {
     override function update(elapsed:Float)
     {
         super.update(elapsed);
-
-        leftRect.alpha = 0;
-        downRect.alpha = 0;
-        upRect.alpha = 0;
-        rightRect.alpha = 0;
+        leftRect.alpha = 0.2;
+        downRect.alpha = 0.2;
+        upRect.alpha = 0.2;
+        rightRect.alpha = 0.2;
 
         for (touch in FlxG.touches.list)
         {
@@ -74,30 +75,26 @@ class Hitbox extends FlxGroup {
 
             if (leftRect.overlapsPoint(pos))
             {
-                leftRect.alpha = 0.2;
                 leftTurbo.update(elapsed);
-                if (leftTurbo.activated) PlayState.instance.keyShit(0, true);
+                if (leftTurbo.activated) PlayState.instance.triggerNote(0);
             }
 
             if (downRect.overlapsPoint(pos))
             {
-                downRect.alpha = 0.2;
                 downTurbo.update(elapsed);
-                if (downTurbo.activated) PlayState.instance.keyShit(1, true);
+                if (downTurbo.activated) PlayState.instance.triggerNote(1);
             }
 
             if (upRect.overlapsPoint(pos))
             {
-                upRect.alpha = 0.2;
                 upTurbo.update(elapsed);
-                if (upTurbo.activated) PlayState.instance.keyShit(2, true);
+                if (upTurbo.activated) PlayState.instance.triggerNote(2);
             }
 
             if (rightRect.overlapsPoint(pos))
             {
-                rightRect.alpha = 0.2;
                 rightTurbo.update(elapsed);
-                if (rightTurbo.activated) PlayState.instance.keyShit(3, true);
+                if (rightTurbo.activated) PlayState.instance.triggerNote(3);
             }
         }
     }
