@@ -20,6 +20,8 @@ class Options
 	/**
 	 * SETTINGS
 	 */
+	public static var hitboxOpacity:Int = 0.25;
+	public static var hitboxHints:Bool = true;
 	public static var naughtyness:Bool = true;
 	public static var downscroll:Bool = false;
 	public static var ghostTapping:Bool = true;
