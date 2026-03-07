@@ -24,6 +24,15 @@ class HitBox extends FlxSpriteGroup {
         
         scrollFactor.set();
     }
+
+    public static function BACK():Bool {
+        return #if android FlxG.android.justReleased.BACK #else false #end;
+    }
+
+    override public function destroy() {
+        super.destroy();
+        buttonLeft = buttonDown = buttonUp = buttonRight = null;
+    }
 }
 
 class HitboxButton extends FlxButton {
@@ -36,7 +45,7 @@ class HitboxButton extends FlxButton {
     override public function update(elapsed:Float) {
         super.update(elapsed);
 
-        if (status == PRESSED) 
+        if (status == FlxButton.PRESSED) 
             alpha = 0.25;
         else 
             alpha = 0.0001;
