@@ -895,10 +895,6 @@ class PlayState extends MusicBeatState
 
 		startingSong = true;
 
-		#if android
-        add(new Hitbox());
-        #end
-
 		super.create();
 
 		for(s in introSprites)
@@ -1087,6 +1083,11 @@ class PlayState extends MusicBeatState
         add(hitbox);
         #end
 	}
+
+	public function triggerNoteSafe(noteIndex:Int):Void
+{
+    keyShit(noteIndex, true);
+}
 
 	public override function destroy() {
 		var notNull = stage != null;
