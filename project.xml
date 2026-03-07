@@ -42,7 +42,7 @@
 	<window if="mac" allow-high-dpi="true" />
 
 	<!--Mobile-specific-->
-	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" resizable="false"/>
+	<window if="mobile" orientation="landscape" fullscreen="true" width="1280" height="720" resizable="false"/>
 
 	<!--Switch-specific-->
 	<window if="switch" orientation="landscape" fullscreen="true" width="0" height="0" resizable="true" />
@@ -52,10 +52,10 @@
 	<!-- Comment this out to disable updates 
 	<define name="UPDATE_CHECKING" unless="web || hl || neko || debug"/> !-->
 
-	<!-- Comment this out to disable Discord RPC !-->
+	<!-- Comment this out to disable Discord RPC 
 	<section if="cpp">
 		<define name="DISCORD_RPC" if="desktop"/>
-	</section>
+	</section> !-->
 
 	<!-- Uncomment this to achive faster compile times, will strip extraneous and commonly unused features. -->
 	<!-- <define name="STRIPPED_COMPILE" unless="debug"/> -->
