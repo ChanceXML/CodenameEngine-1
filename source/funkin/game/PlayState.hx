@@ -1077,17 +1077,11 @@ class PlayState extends MusicBeatState
 
 		gameAndCharsCall("onStartSong");
 
-	    #if android
-        var hitbox = new mobile.controls.Hitbox();
-        hitbox.cameras = [camHUD];
+		#if android
+        var hitbox = new funkin.mobile.controls.Hitbox("assets/images/hitbox_hint.png", FlxG.width / 4, FlxG.height);
         add(hitbox);
         #end
 	}
-
-	public function triggerNoteSafe(noteIndex:Int):Void
-{
-    keyShit(noteIndex, true);
-}
 
 	public override function destroy() {
 		var notNull = stage != null;
