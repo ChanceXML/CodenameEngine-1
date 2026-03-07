@@ -7,7 +7,7 @@ import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
-import funkins.game.PlayState;
+import funkin.game.PlayState;
 
 class Hitbox extends FlxGroup {
     var hintBG:FlxSprite;
