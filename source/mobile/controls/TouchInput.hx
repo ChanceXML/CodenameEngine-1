@@ -50,6 +50,10 @@ class TouchInput {
     }
 
     public static function BACK():Bool {
-        return #if android FlxG.android.justReleased.BACK #else false #end;
+        #if android
+        return FlxG.android.justReleased.BACK;
+        #else
+        return false;
+        #end
     }
 }
