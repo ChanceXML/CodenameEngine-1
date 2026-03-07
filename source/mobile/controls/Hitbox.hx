@@ -1,3 +1,5 @@
+package mobile.controls;
+
 #if android
 import funkin.backend.TurboControls.TurboKeys;
 import flixel.input.keyboard.FlxKey;
