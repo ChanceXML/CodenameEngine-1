@@ -35,6 +35,7 @@ import funkin.game.scoring.RatingManager.Rating;
 import funkin.menus.*;
 import funkin.backend.week.WeekData;
 import funkin.savedata.FunkinSave;
+import funkin.options.Options;
 import haxe.io.Path;
 import mobile.controls.HitBox;
 import openfl.events.KeyboardEvent;
