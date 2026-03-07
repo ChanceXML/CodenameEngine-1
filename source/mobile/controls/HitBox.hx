@@ -1,8 +1,8 @@
 package mobile.controls;
 
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
-import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 
 class HitBox extends FlxSpriteGroup {
@@ -13,7 +13,6 @@ class HitBox extends FlxSpriteGroup {
 
     public function new() {
         super();
-
         var w:Int = Std.int(FlxG.width / 4);
         var h:Int = FlxG.height;
 
@@ -28,42 +27,44 @@ class HitBox extends FlxSpriteGroup {
     public static function BACK():Bool {
         return #if android FlxG.android.justReleased.BACK #else false #end;
     }
-
-    override public function destroy() {
-        super.destroy();
-        buttonLeft = buttonDown = buttonUp = buttonRight = null;
-    }
 }
 
-class HitboxButton extends FlxButton {
-    private var _pressed:Bool = false;
+class HitboxButton extends FlxSprite {
+    public var onDown:HitboxCallback = {callback: null};
+    public var onUp:HitboxCallback = {callback: null};
+    public var onOut:HitboxCallback = {callback: null};
+
+    public var pressed:Bool = false;
+    private var _wasPressed:Bool = false;
 
     public function new(x:Float, y:Float, width:Int, height:Int, color:FlxColor) {
         super(x, y);
         makeGraphic(width, height, color);
         alpha = 0.0001;
+        antialiasing = false;
     }
 
     override public function update(elapsed:Float) {
-        var isCurrentlyPressed:Bool = false;
+        _wasPressed = pressed;
+        pressed = false;
 
         #if FLX_TOUCH
-        for (touch in FlxG.touches.list) if (touch.overlaps(this) && touch.pressed) isCurrentlyPressed = true;
+        for (touch in FlxG.touches.list) if (touch.overlaps(this) && touch.pressed) pressed = true;
         #end
 
         #if FLX_MOUSE
-        if (FlxG.mouse.overlaps(this) && FlxG.mouse.pressed) isCurrentlyPressed = true;
+        if (FlxG.mouse.overlaps(this) && FlxG.mouse.pressed) pressed = true;
         #end
 
-        if (isCurrentlyPressed && !_pressed) {
-            if (onDown != null && onDown.callback != null) onDown.callback();
-        } else if (!isCurrentlyPressed && _pressed) {
-            if (onUp != null && onUp.callback != null) onUp.callback();
-        }
+        if (pressed && !_wasPressed && onDown.callback != null) onDown.callback();
+        if (!pressed && _wasPressed && onUp.callback != null) onUp.callback();
 
-        _pressed = isCurrentlyPressed;
-        alpha = _pressed ? 0.25 : 0.0001;
-
+        alpha = pressed ? 0.25 : 0.0001;
         super.update(elapsed);
     }
 }
+
+typedef HitboxCallback = {
+    var callback:Void->Void;
+}
+    
