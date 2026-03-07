@@ -1,59 +1,67 @@
 package mobile.controls;
 
-import openfl.display.BitmapData;
-import openfl.display.Shape;
-import flixel.graphics.FlxGraphic;
 import flixel.FlxG;
-import flixel.tweens.FlxTween;
-import flixel.tweens.FlxEase;
+import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxColor;
-import flixel.ui.FlxButton;
 
 class HitBox extends FlxSpriteGroup {
-    public var buttonLeft:FlxButton;
-    public var buttonDown:FlxButton;
-    public var buttonUp:FlxButton;
-    public var buttonRight:FlxButton;
+    public var buttonLeft:HitboxButton;
+    public var buttonDown:HitboxButton;
+    public var buttonUp:HitboxButton;
+    public var buttonRight:HitboxButton;
 
     public function new() {
         super();
 
-        var buttonWidth:Int = Std.int(FlxG.width / 4);
-        var buttonHeight:Int = FlxG.height;
+        var w:Int = Std.int(FlxG.width / 4);
+        var h:Int = FlxG.height;
 
-        add(buttonLeft = createHitbox(0, 0, buttonWidth, buttonHeight, '0xC24B99'));
-        add(buttonDown = createHitbox(buttonWidth, 0, buttonWidth, buttonHeight, '0x00FFFF'));
-        add(buttonUp = createHitbox(buttonWidth * 2, 0, buttonWidth, buttonHeight, '0x12FA05'));
-        add(buttonRight = createHitbox(buttonWidth * 3, 0, buttonWidth, buttonHeight, '0xF9393F'));
+        add(buttonLeft  = new HitboxButton(0, 0, w, h, 0xFFC24B99));
+        add(buttonDown  = new HitboxButton(w, 0, w, h, 0xFF00FFFF));
+        add(buttonUp    = new HitboxButton(w * 2, 0, w, h, 0xFF12FA05));
+        add(buttonRight = new HitboxButton(w * 3, 0, w, h, 0xFFF9393F));
         
         scrollFactor.set();
     }
+}
 
-    function createHitbox(x:Float, y:Float, width:Int, height:Int, color:String):FlxButton {
-        var button:FlxButton = new FlxButton(x, y);
-        button.makeGraphic(width, height, FlxColor.fromString(color));
-        button.alpha = 0.0001;
-        
-        button.onDown.callback = function() {
-            FlxTween.tween(button, {alpha: 0.25}, 0.01, {ease: FlxEase.circInOut});
-        };
+class HitboxButton extends FlxSprite {
+    public var pressed:Bool = false;
+    public var justPressed:Bool = false;
+    private var _wasPressed:Bool = false;
 
-        button.onUp.callback = function() {
-            FlxTween.tween(button, {alpha: 0.0001}, 0.1, {ease: FlxEase.circInOut});
-        };
-
-        button.onOut.callback = button.onUp.callback;
-
-        return button;
+    public function new(x:Float, y:Float, width:Int, height:Int, color:FlxColor) {
+        super(x, y);
+        makeGraphic(width, height, color);
+        alpha = 0.0001;
     }
 
-    public static function BACK():Bool {
-        return #if android FlxG.android.justReleased.BACK #else false #end;
-    }
+    override public function update(elapsed:Float) {
+        _wasPressed = pressed;
+        pressed = false;
 
-    override public function destroy() {
-        super.destroy();
-        buttonLeft = buttonDown = buttonUp = buttonRight = null;
+        #if FLX_TOUCH
+        for (touch in FlxG.touches.list) {
+            if (touch.overlaps(this) && touch.pressed) {
+                pressed = true;
+            }
+        }
+        #end
+
+        #if FLX_MOUSE
+        if (FlxG.mouse.overlaps(this) && FlxG.mouse.pressed) {
+            pressed = true;
+        }
+        #end
+
+        justPressed = (pressed && !_wasPressed);
+
+        if (pressed) 
+            alpha = 0.25;
+        else 
+            alpha = 0.0001;
+
+        super.update(elapsed);
     }
 }
