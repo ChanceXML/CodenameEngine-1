@@ -1,8 +1,8 @@
 package mobile.controls;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
+import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 
 class HitBox extends FlxSpriteGroup {
@@ -26,12 +26,7 @@ class HitBox extends FlxSpriteGroup {
     }
 }
 
-class HitboxButton extends FlxSprite {
-    public var pressed:Bool = false;
-    public var justPressed:Bool = false;
-    public var justReleased:Bool = false;
-    private var _wasPressed:Bool = false;
-
+class HitboxButton extends FlxButton {
     public function new(x:Float, y:Float, width:Int, height:Int, color:FlxColor) {
         super(x, y);
         makeGraphic(width, height, color);
@@ -39,31 +34,11 @@ class HitboxButton extends FlxSprite {
     }
 
     override public function update(elapsed:Float) {
-        _wasPressed = pressed;
-        pressed = false;
+        super.update(elapsed);
 
-        #if FLX_TOUCH
-        for (touch in FlxG.touches.list) {
-            if (touch.overlaps(this) && touch.pressed) {
-                pressed = true;
-            }
-        }
-        #end
-
-        #if FLX_MOUSE
-        if (FlxG.mouse.overlaps(this) && FlxG.mouse.pressed) {
-            pressed = true;
-        }
-        #end
-
-        justPressed = (pressed && !_wasPressed);
-        justReleased = (!pressed && _wasPressed);
-
-        if (pressed) 
+        if (status == PRESSED) 
             alpha = 0.25;
         else 
             alpha = 0.0001;
-
-        super.update(elapsed);
     }
 }
