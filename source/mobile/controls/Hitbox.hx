@@ -1,34 +1,31 @@
 package mobile.controls;
 
+#if android
 import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
-import funkins.backend.TurboKeys;
 import flixel.input.keyboard.FlxKey;
+import funkins.backend.TurboControls;
 import funkins.game.PlayState;
 
 class Hitbox extends FlxGroup
 {
-    #if android
     var hintBG:FlxSprite;
-
     var leftRect:FlxSprite;
     var downRect:FlxSprite;
     var upRect:FlxSprite;
     var rightRect:FlxSprite;
 
-    public var leftTurbo:TurboKeys;
-    public var downTurbo:TurboKeys;
-    public var upTurbo:TurboKeys;
-    public var rightTurbo:TurboKeys;
-    #end
+    public var leftTurbo:TurboControls;
+    public var downTurbo:TurboControls;
+    public var upTurbo:TurboControls;
+    public var rightTurbo:TurboControls;
 
     public function new()
     {
         super();
 
-        #if android
         var w = FlxG.width / 4;
         var h = FlxG.height;
 
@@ -46,14 +43,12 @@ class Hitbox extends FlxGroup
         add(upRect);
         add(rightRect);
 
-        leftTurbo  = new TurboKeys([FlxKey.LEFT]);
-        downTurbo  = new TurboKeys([FlxKey.DOWN]);
-        upTurbo    = new TurboKeys([FlxKey.UP]);
-        rightTurbo = new TurboKeys([FlxKey.RIGHT]);
-        #end
+        leftTurbo  = new TurboControls([FlxKey.LEFT]);
+        downTurbo  = new TurboControls([FlxKey.DOWN]);
+        upTurbo    = new TurboControls([FlxKey.UP]);
+        rightTurbo = new TurboControls([FlxKey.RIGHT]);
     }
 
-    #if android
     function makeRect(x:Float, y:Float, w:Float, h:Float, color:Int):FlxSprite
     {
         var s = new FlxSprite(x, y);
@@ -76,6 +71,7 @@ class Hitbox extends FlxGroup
         for (touch in FlxG.touches.list)
         {
             if (!touch.pressed) continue;
+
             var pos:FlxPoint = touch.getScreenPosition();
 
             if (leftRect.overlapsPoint(pos))
@@ -107,5 +103,5 @@ class Hitbox extends FlxGroup
             }
         }
     }
-    #end
 }
+#end
