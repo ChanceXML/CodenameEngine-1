@@ -1,23 +1,27 @@
 package mobile.controls;
 
+#if android
 import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
-import flixel.util.FlxColor;
+import funkins.backend.TurboKeys;
+import flixel.input.keyboard.FlxKey;
 import funkins.game.PlayState;
 
-class Hitbox extends FlxGroup
+class Hitbox : FlxGroup
 {
-    public static var LEFT:Bool = false;
-    public static var DOWN:Bool = false;
-    public static var UP:Bool = false;
-    public static var RIGHT:Bool = false;
+    var hintBG:FlxSprite;
 
-    var leftHint:FlxSprite;
-    var downHint:FlxSprite;
-    var upHint:FlxSprite;
-    var rightHint:FlxSprite;
+    var leftRect:FlxSprite;
+    var downRect:FlxSprite;
+    var upRect:FlxSprite;
+    var rightRect:FlxSprite;
+
+    public var leftTurbo:TurboKeys;
+    public var downTurbo:TurboKeys;
+    public var upTurbo:TurboKeys;
+    public var rightTurbo:TurboKeys;
 
     public function new()
     {
@@ -26,25 +30,35 @@ class Hitbox extends FlxGroup
         var w = FlxG.width / 4;
         var h = FlxG.height;
 
-        leftHint  = makeHint(0, 0, w, h, FlxColor.fromInts(255, 0, 0, 50));     
-        downHint  = makeHint(w, 0, w, h, FlxColor.fromInts(0, 255, 255, 50));   
-        upHint    = makeHint(w*2, 0, w, h, FlxColor.fromInts(0, 255, 0, 50));   
-        rightHint = makeHint(w*3, 0, w, h, FlxColor.fromInts(255, 255, 0, 50)); 
+        hintBG = new FlxSprite(0, 0, "assets/images/mobile/hitbox_hint.png");
+        hintBG.setGraphicSize(FlxG.width, FlxG.height);
+        hintBG.cameras = [FlxG.cameraManager.getCamera("camHUD")];
+        add(hintBG);
 
-        add(leftHint);
-        add(downHint);
-        add(upHint);
-        add(rightHint);
+        leftRect  = makeRect(0, 0, w, h, 0x80FF0000);
+        downRect  = makeRect(w, 0, w, h, 0x8000FFFF);
+        upRect    = makeRect(w*2, 0, w, h, 0x8000FF00);
+        rightRect = makeRect(w*3, 0, w, h, 0x80FFFF00);
+
+        add(leftRect);
+        add(downRect);
+        add(upRect);
+        add(rightRect);
+
+        leftTurbo  = new TurboKeys([FlxKey.LEFT]);
+        downTurbo  = new TurboKeys([FlxKey.DOWN]);
+        upTurbo    = new TurboKeys([FlxKey.UP]);
+        rightTurbo = new TurboKeys([FlxKey.RIGHT]);
     }
 
-    function makeHint(x:Float, y:Float, w:Float, h:Float, color:Int):FlxSprite
+    function makeRect(x:Float, y:Float, w:Float, h:Float, color:Int):FlxSprite
     {
         var s = new FlxSprite(x, y);
         s.makeGraphic(Std.int(w), Std.int(h), color);
         s.alpha = 0;
         s.immovable = true;
         s.moves = false;
-        s.scrollFactor.set(); 
+        s.cameras = [FlxG.cameraManager.getCamera("camHUD")];
         return s;
     }
 
@@ -52,47 +66,45 @@ class Hitbox extends FlxGroup
     {
         super.update(elapsed);
 
-        LEFT = DOWN = UP = RIGHT = false;
-
-        leftHint.alpha = 0;
-        downHint.alpha = 0;
-        upHint.alpha = 0;
-        rightHint.alpha = 0;
+        leftRect.alpha = 0;
+        downRect.alpha = 0;
+        upRect.alpha = 0;
+        rightRect.alpha = 0;
 
         for (touch in FlxG.touches.list)
         {
-            if (touch.pressed)
+            if (!touch.pressed) continue;
+
+            var pos:FlxPoint = touch.getScreenPosition();
+
+            if (leftRect.overlapsPoint(pos))
             {
-                var pos:FlxPoint = touch.getScreenPosition(); 
+                leftRect.alpha = 0.2;
+                leftTurbo.update(elapsed);
+                if (leftTurbo.activated) PlayState.noteLeft();
+            }
 
-                if (leftHint.overlapsPoint(pos)) 
-                {
-                    LEFT = true;
-                    leftHint.alpha = 0.2;
-                    PlayState.noteLeft();
-                }
+            if (downRect.overlapsPoint(pos))
+            {
+                downRect.alpha = 0.2;
+                downTurbo.update(elapsed);
+                if (downTurbo.activated) PlayState.noteDown();
+            }
 
-                if (downHint.overlapsPoint(pos)) 
-                {
-                    DOWN = true;
-                    downHint.alpha = 0.2;
-                    PlayState.noteDown();
-                }
+            if (upRect.overlapsPoint(pos))
+            {
+                upRect.alpha = 0.2;
+                upTurbo.update(elapsed);
+                if (upTurbo.activated) PlayState.noteUp();
+            }
 
-                if (upHint.overlapsPoint(pos)) 
-                {
-                    UP = true;
-                    upHint.alpha = 0.2;
-                    PlayState.noteUp();
-                }
-
-                if (rightHint.overlapsPoint(pos)) 
-                {
-                    RIGHT = true;
-                    rightHint.alpha = 0.2;
-                    PlayState.noteRight();
-                }
+            if (rightRect.overlapsPoint(pos))
+            {
+                rightRect.alpha = 0.2;
+                rightTurbo.update(elapsed);
+                if (rightTurbo.activated) PlayState.noteRight();
             }
         }
     }
 }
+#end
