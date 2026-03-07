@@ -1,46 +1,54 @@
 package mobile.controls;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
+import flixel.FlxSprite;
 import flixel.util.FlxColor;
-import mobile.controls.TouchInput;
+import mobile.backend.TouchInput;
 import funkin.game.PlayState;
 
 class Hitbox extends FlxSpriteGroup {
-    public var notes:Array<FlxSprite> = [];
+    public var hitboxes:Array<FlxSprite> = [];
     public var hint:FlxSprite;
 
-    public function new(hintPath:String, width:Float, height:Float) {
+    public function new(hintPath:String = null) {
         super();
-        hint = new FlxSprite(0, 0, hintPath);
-        hint.scrollFactor.set();
-        add(hint);
+
+        if (hintPath != null) {
+            hint = new FlxSprite(0, 0, hintPath);
+            hint.setSize(FlxG.width, FlxG.height);
+            add(hint);
+        }
+
+        createHitboxes();
+
+        PlayState.instance.onStep.add(() -> {
+            updateHitboxes();
+        });
+    }
+
+    function createHitboxes() {
+        var width = FlxG.width / 4;
+        var height = FlxG.height;
 
         for (i in 0...4) {
             var hb = new FlxSprite(i * width, 0);
             hb.makeGraphic(Std.int(width), Std.int(height), FlxColor.WHITE);
             hb.alpha = 0;
-            hb.scrollFactor.set();
             add(hb);
-            notes.push(hb);
+            hitboxes.push(hb);
         }
     }
 
     public function updateHitboxes():Void {
-        for (i in 0...notes.length) {
-            var hb = notes[i];
+        for (i in 0...hitboxes.length) {
+            var hb = hitboxes[i];
             if (TouchInput.pressed(hb)) {
                 hb.alpha = 0.25;
-                if (PlayState.instance != null) PlayState.instance.hitNote(i);
+                PlayState.instance.keyShit(i);
             } else {
                 hb.alpha = 0;
             }
         }
     }
-
-    override public function update(elapsed:Float):Void {
-        super.update(elapsed);
-        updateHitboxes();
-    }
-}
+                                      }
