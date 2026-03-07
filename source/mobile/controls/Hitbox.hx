@@ -4,43 +4,41 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxColor;
-import mobile.controls.TouchInput;
-import funkin.game.PlayState;
+import funkin.mobile.backend.TouchInput;
 
-class HitBox extends FlxSpriteGroup {
+class Hitbox extends FlxSpriteGroup {
+	public var hitboxes:Array<FlxSprite>;
+	public var hitboxHint:FlxSprite;
 
-    public var hitboxHint:FlxSprite;
-    public var hitboxes:Array<FlxSprite> = [];
+	public function new(hitboxHintPath:String, width:Float, height:Float) {
+		super();
+		hitboxes = [];
+		createHitboxes(width, height);
+		addHint(hitboxHintPath, width, height);
+	}
 
-    public function new() {
-        super();
+	private function createHitboxes(width:Float, height:Float) {
+		var colors = [FlxColor.RED, FlxColor.BLUE, FlxColor.GREEN, FlxColor.YELLOW];
+		for (i in 0...4) {
+			var hb = new FlxSprite(i * width, 0);
+			hb.makeGraphic(width, height, colors[i]);
+			hb.alpha = 0; // invisible by default
+			hitboxes.push(hb);
+			add(hb);
+		}
+	}
 
-        hitboxHint = new FlxSprite(FlxG.width / 2 - 100, FlxG.height - 150);
-        hitboxHint.loadGraphic("assets/images/hitbox_hint.png");
-        add(hitboxHint);
+	private function addHint(path:String, width:Float, height:Float) {
+		hitboxHint = new FlxSprite(0, 0, path);
+		hitboxHint.scale.set(width / hitboxHint.width, height / hitboxHint.height);
+		add(hitboxHint);
+	}
 
-        var width:Float = FlxG.width / 4;
-        var height:Float = FlxG.height;
-        for (i in 0...4) {
-            var hb = new FlxSprite(i * width, 0, width, height);
-            hb.makeGraphic(width, height, FlxColor.WHITE);
-            hb.alpha = 0;
-            hitboxes.push(hb);
-            add(hb);
-        }
-    }
-
-    override public function update(elapsed:Float):Void {
-        super.update(elapsed);
-
-        for (i in 0...hitboxes.length) {
-            var hb = hitboxes[i];
-            if (TouchInput.pressed(hb)) {
-                hb.alpha = 0.25;
-                if (PlayState.instance != null) PlayState.instance.hitNote(i);
-            } else {
-                hb.alpha = 0;
-            }
-        }
-    }
+	public function updateHitboxes():Void {
+		for (i in 0...hitboxes.length) {
+			var hb = hitboxes[i];
+			if (TouchInput.pressed(hb)) hb.alpha = 0.25;
+			else hb.alpha = 0;
+		}
+	}
 }
