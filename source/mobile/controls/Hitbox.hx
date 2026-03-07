@@ -1,15 +1,13 @@
-package mobile.controls;
-
 #if android
+import funkin.backend.TurboControls.TurboKeys;
+import flixel.input.keyboard.FlxKey;
 import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
-import flixel.input.keyboard.FlxKey;
-import funkin.backend.TurboControls;
-import funkin.game.PlayState;
+import funkins.game.PlayState;
 
-class Hitbox extends FlxGroup
+class Hitbox : FlxGroup
 {
     var hintBG:FlxSprite;
     var leftRect:FlxSprite;
@@ -17,10 +15,10 @@ class Hitbox extends FlxGroup
     var upRect:FlxSprite;
     var rightRect:FlxSprite;
 
-    public var leftTurbo:TurboControls;
-    public var downTurbo:TurboControls;
-    public var upTurbo:TurboControls;
-    public var rightTurbo:TurboControls;
+    public var leftTurbo:TurboKeys;
+    public var downTurbo:TurboKeys;
+    public var upTurbo:TurboKeys;
+    public var rightTurbo:TurboKeys;
 
     public function new()
     {
@@ -43,10 +41,10 @@ class Hitbox extends FlxGroup
         add(upRect);
         add(rightRect);
 
-        leftTurbo  = new TurboControls([FlxKey.LEFT]);
-        downTurbo  = new TurboControls([FlxKey.DOWN]);
-        upTurbo    = new TurboControls([FlxKey.UP]);
-        rightTurbo = new TurboControls([FlxKey.RIGHT]);
+        leftTurbo  = new TurboKeys([FlxKey.LEFT]);
+        downTurbo  = new TurboKeys([FlxKey.DOWN]);
+        upTurbo    = new TurboKeys([FlxKey.UP]);
+        rightTurbo = new TurboKeys([FlxKey.RIGHT]);
     }
 
     function makeRect(x:Float, y:Float, w:Float, h:Float, color:Int):FlxSprite
@@ -71,35 +69,34 @@ class Hitbox extends FlxGroup
         for (touch in FlxG.touches.list)
         {
             if (!touch.pressed) continue;
-
             var pos:FlxPoint = touch.getScreenPosition();
 
             if (leftRect.overlapsPoint(pos))
             {
                 leftRect.alpha = 0.2;
                 leftTurbo.update(elapsed);
-                if (leftTurbo.activated) PlayState.noteLeft();
+                if (leftTurbo.activated) PlayState.instance.keyShit(0, true);
             }
 
             if (downRect.overlapsPoint(pos))
             {
                 downRect.alpha = 0.2;
                 downTurbo.update(elapsed);
-                if (downTurbo.activated) PlayState.noteDown();
+                if (downTurbo.activated) PlayState.instance.keyShit(1, true);
             }
 
             if (upRect.overlapsPoint(pos))
             {
                 upRect.alpha = 0.2;
                 upTurbo.update(elapsed);
-                if (upTurbo.activated) PlayState.noteUp();
+                if (upTurbo.activated) PlayState.instance.keyShit(2, true);
             }
 
             if (rightRect.overlapsPoint(pos))
             {
                 rightRect.alpha = 0.2;
                 rightTurbo.update(elapsed);
-                if (rightTurbo.activated) PlayState.noteRight();
+                if (rightTurbo.activated) PlayState.instance.keyShit(3, true);
             }
         }
     }
