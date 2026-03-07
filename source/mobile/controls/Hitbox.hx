@@ -1,87 +1,59 @@
 package mobile.controls;
 
+import openfl.display.BitmapData;
+import openfl.display.Shape;
+import flixel.graphics.FlxGraphic;
 import flixel.FlxG;
-import flixel.FlxSprite;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxColor;
+import flixel.ui.FlxButton;
 
-class Hitbox extends FlxSpriteGroup {
-    public var buttonLeft:HitboxButton;
-    public var buttonDown:HitboxButton;
-    public var buttonUp:HitboxButton;
-    public var buttonRight:HitboxButton;
+class HitBox extends FlxSpriteGroup {
+    public var buttonLeft:FlxButton;
+    public var buttonDown:FlxButton;
+    public var buttonUp:FlxButton;
+    public var buttonRight:FlxButton;
 
     public function new() {
         super();
 
-        var w:Int = Std.int(FlxG.width / 4);
-        var h:Int = FlxG.height;
+        var buttonWidth:Int = Std.int(FlxG.width / 4);
+        var buttonHeight:Int = FlxG.height;
 
-        buttonLeft  = new HitboxButton(0, 0, w, h, 0xFFC24B99);
-        buttonDown  = new HitboxButton(w, 0, w, h, 0xFF00FFFF);
-        buttonUp    = new HitboxButton(w * 2, 0, w, h, 0xFF12FA05);
-        buttonRight = new HitboxButton(w * 3, 0, w, h, 0xFFF9393F);
-
-        add(buttonLeft);
-        add(buttonDown);
-        add(buttonUp);
-        add(buttonRight);
+        add(buttonLeft = createHitbox(0, 0, buttonWidth, buttonHeight, '0xC24B99'));
+        add(buttonDown = createHitbox(buttonWidth, 0, buttonWidth, buttonHeight, '0x00FFFF'));
+        add(buttonUp = createHitbox(buttonWidth * 2, 0, buttonWidth, buttonHeight, '0x12FA05'));
+        add(buttonRight = createHitbox(buttonWidth * 3, 0, buttonWidth, buttonHeight, '0xF9393F'));
+        
+        scrollFactor.set();
     }
 
-    public var leftPressed(get, never):Bool;
-    inline function get_leftPressed() return buttonLeft.pressed;
+    function createHitbox(x:Float, y:Float, width:Int, height:Int, color:String):FlxButton {
+        var button:FlxButton = new FlxButton(x, y);
+        button.makeGraphic(width, height, FlxColor.fromString(color));
+        button.alpha = 0.0001;
+        
+        button.onDown.callback = function() {
+            FlxTween.tween(button, {alpha: 0.25}, 0.01, {ease: FlxEase.circInOut});
+        };
 
-    public var leftJustPressed(get, never):Bool;
-    inline function get_leftJustPressed() return buttonLeft.justPressed;
+        button.onUp.callback = function() {
+            FlxTween.tween(button, {alpha: 0.0001}, 0.1, {ease: FlxEase.circInOut});
+        };
 
-    public var downPressed(get, never):Bool;
-    inline function get_downPressed() return buttonDown.pressed;
+        button.onOut.callback = button.onUp.callback;
 
-    public var downJustPressed(get, never):Bool;
-    inline function get_downJustPressed() return buttonDown.justPressed;
-
-    public var upPressed(get, never):Bool;
-    inline function get_upPressed() return buttonUp.pressed;
-
-    public var upJustPressed(get, never):Bool;
-    inline function get_upJustPressed() return buttonUp.justPressed;
-
-    public var rightPressed(get, never):Bool;
-    inline function get_rightPressed() return buttonRight.pressed;
-
-    public var rightJustPressed(get, never):Bool;
-    inline function get_rightJustPressed() return buttonRight.justPressed;
-}
-
-class HitboxButton extends FlxSprite {
-    public var pressed:Bool = false;
-    public var justPressed:Bool = false;
-    public var justReleased:Bool = false;
-    private var _wasPressed:Bool = false;
-
-    public function new(x:Float, y:Float, width:Int, height:Int, color:FlxColor) {
-        super(x, y);
-        makeGraphic(width, height, color);
-        this.alpha = 0.00001;
-        this.scrollFactor.set(0, 0);
+        return button;
     }
 
-    override public function update(elapsed:Float):Void {
-        super.update(elapsed);
-        _wasPressed = pressed;
-        pressed = false;
+    public static function BACK():Bool {
+        return #if android FlxG.android.justReleased.BACK #else false #end;
+    }
 
-        #if FLX_TOUCH
-        for (touch in FlxG.touches.list) if (touch.overlaps(this)) pressed = true;
-        #end
-
-        #if FLX_MOUSE
-        if (FlxG.mouse.pressed && FlxG.mouse.overlaps(this)) pressed = true;
-        #end
-
-        justPressed = (pressed && !_wasPressed);
-        justReleased = (!pressed && _wasPressed);
-
-        this.alpha = pressed ? 0.45 : 0.00001;
+    override public function destroy() {
+        super.destroy();
+        buttonLeft = buttonDown = buttonUp = buttonRight = null;
     }
 }
