@@ -680,13 +680,6 @@ class PlayState extends MusicBeatState
 		hitbox = new HitBox();
         add(hitbox);
 
-		var hint = new FlxSprite(0, 0);
-        hint.loadGraphic(Paths.image('mobile/hitbox_hint'));
-        hint.antialiasing = true;
-        hint.cameras = [camHUD];
-		hint.visible = Options.hitboxHints;
-        add(hint);
-
         hitbox.buttonLeft.onDown.callback = function() { triggerKey(LEFT, true); };
         hitbox.buttonDown.onDown.callback = function() { triggerKey(DOWN, true); };
         hitbox.buttonUp.onDown.callback = function() { triggerKey(UP, true); };
@@ -1115,6 +1108,13 @@ class PlayState extends MusicBeatState
 		updateDiscordPresence();
 
 		gameAndCharsCall("onStartSong");
+
+		var hint = new FlxSprite(0, 0);
+        hint.loadGraphic(Paths.image('mobile/hitbox_hint'));
+        hint.antialiasing = true;
+        hint.cameras = [camHUD];
+		hint.visible = Options.hitboxHints;
+        add(hint);
 	}
 
 	public override function destroy() {
