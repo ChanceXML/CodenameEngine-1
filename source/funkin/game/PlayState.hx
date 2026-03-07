@@ -35,7 +35,7 @@ import funkin.menus.*;
 import funkin.backend.week.WeekData;
 import funkin.savedata.FunkinSave;
 import haxe.io.Path;
-import mobile.controls.HitBox
+import mobile.controls.HitBox;
 
 using StringTools;
 
