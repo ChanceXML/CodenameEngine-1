@@ -57,37 +57,31 @@ class HitboxButton extends FlxSprite {
     public var pressed:Bool = false;
     public var justPressed:Bool = false;
     public var justReleased:Bool = false;
-
     private var _wasPressed:Bool = false;
 
     public function new(x:Float, y:Float, width:Int, height:Int, color:FlxColor) {
         super(x, y);
         makeGraphic(width, height, color);
-        this.alpha = 0.0;
+        this.alpha = 0.00001;
         this.scrollFactor.set(0, 0);
     }
 
     override public function update(elapsed:Float):Void {
         super.update(elapsed);
-
         _wasPressed = pressed;
         pressed = false;
 
         #if FLX_TOUCH
-        for (touch in FlxG.touches.list) {
-            if (touch.overlaps(this)) {
-                pressed = true;
-            }
-        }
+        for (touch in FlxG.touches.list) if (touch.overlaps(this)) pressed = true;
         #end
 
         #if FLX_MOUSE
-        if (FlxG.mouse.pressed && FlxG.mouse.overlaps(this)) {
-            pressed = true;
-        }
+        if (FlxG.mouse.pressed && FlxG.mouse.overlaps(this)) pressed = true;
         #end
 
         justPressed = (pressed && !_wasPressed);
         justReleased = (!pressed && _wasPressed);
+
+        this.alpha = pressed ? 0.45 : 0.00001;
     }
 }
