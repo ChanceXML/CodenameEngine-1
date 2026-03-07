@@ -1076,12 +1076,17 @@ class PlayState extends MusicBeatState
 		updateDiscordPresence();
 
 		gameAndCharsCall("onStartSong");
+		
+        var mobileControls:mobile.controls.Hitbox;
+        var staticHudImg:flixel.FlxSprite;
 
-		#if android
-		var mobileHitbox:mobile.controls.Hitbox;
-        mobileHitbox = new mobile.controls.Hitbox();
-        add(mobileHitbox);
-		#end
+		staticHudImg = new flixel.FlxSprite(0, 0).loadGraphic(Paths.image('assets/images/mobile/hitbox_hint'));
+        staticHudImg.cameras = [camHUD];
+        add(staticHudImg);
+
+		mobileControls = new mobile.controls.Hitbox();
+        mobileControls.cameras = [camHUD]; // Forces it to the HUD
+        add(mobileControls);
 	}
 
 	public override function destroy() {
