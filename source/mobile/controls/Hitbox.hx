@@ -5,7 +5,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxColor;
 import flixel.FlxBasic;
-import funkin.mobile.backend.TouchInput;
+import mobile.controls.TouchInput;
 
 class Hitbox extends FlxSpriteGroup {
     public var notes:Array<FlxSprite> = [];
