@@ -29,6 +29,7 @@ class HitBox extends FlxSpriteGroup {
 class HitboxButton extends FlxSprite {
     public var pressed:Bool = false;
     public var justPressed:Bool = false;
+    public var justReleased:Bool = false;
     private var _wasPressed:Bool = false;
 
     public function new(x:Float, y:Float, width:Int, height:Int, color:FlxColor) {
@@ -56,6 +57,7 @@ class HitboxButton extends FlxSprite {
         #end
 
         justPressed = (pressed && !_wasPressed);
+        justReleased = (!pressed && _wasPressed);
 
         if (pressed) 
             alpha = 0.25;
