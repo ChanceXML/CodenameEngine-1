@@ -36,6 +36,7 @@ import funkin.backend.week.WeekData;
 import funkin.savedata.FunkinSave;
 import haxe.io.Path;
 import mobile.controls.Hitbox;
+import mobile.controls.TouchInput;
 
 using StringTools;
 
@@ -1078,11 +1079,11 @@ class PlayState extends MusicBeatState
 		gameAndCharsCall("onStartSong");
 		
         var mobileControls:mobile.controls.Hitbox;
-        var staticHudImg:flixel.FlxSprite;
+        var hint:flixel.FlxSprite;
 
-		staticHudImg = new flixel.FlxSprite(0, 0).loadGraphic(Paths.image('assets/images/mobile/hitbox_hint'));
-        staticHudImg.cameras = [camHUD];
-        add(staticHudImg);
+		hint = new flixel.FlxSprite(0, 0).loadGraphic(Paths.image('assets/images/mobile/hitbox_hint'));
+        hint.cameras = [camHUD];
+        add(hint);
 
 		mobileControls = new mobile.controls.Hitbox();
         mobileControls.cameras = [camHUD];
