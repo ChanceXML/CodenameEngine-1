@@ -5,10 +5,10 @@ import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
-import funkin.backend.TurboControls;
-import funkin.backend.system.Controls;
+import funkins.backend.TurboControls;
+import funkins.backend.system.Control;
 import funkin.options.PlayerSettings;
-import funkin.game.PlayState;
+import funkins.game.PlayState;
 
 class Hitbox extends FlxGroup
 {
@@ -27,6 +27,7 @@ class Hitbox extends FlxGroup
     public function new()
     {
         super();
+
         var w = FlxG.width / 4;
         var h = FlxG.height;
 
@@ -44,10 +45,10 @@ class Hitbox extends FlxGroup
         add(upRect);
         add(rightRect);
 
-        leftTurbo  = new TurboControls([PlayerSettings.solo.controls.LEFT]);
-        downTurbo  = new TurboControls([PlayerSettings.solo.controls.DOWN]);
-        upTurbo    = new TurboControls([PlayerSettings.solo.controls.UP]);
-        rightTurbo = new TurboControls([PlayerSettings.solo.controls.RIGHT]);
+        leftTurbo  = new TurboControls([PlayerSettings.solo.controls.getActionFromControl(Control.LEFT)]);
+        downTurbo  = new TurboControls([PlayerSettings.solo.controls.getActionFromControl(Control.DOWN)]);
+        upTurbo    = new TurboControls([PlayerSettings.solo.controls.getActionFromControl(Control.UP)]);
+        rightTurbo = new TurboControls([PlayerSettings.solo.controls.getActionFromControl(Control.RIGHT)]);
     }
 
     function makeRect(x:Float, y:Float, w:Float, h:Float, color:Int):FlxSprite
@@ -63,6 +64,7 @@ class Hitbox extends FlxGroup
     override function update(elapsed:Float)
     {
         super.update(elapsed);
+
         leftRect.alpha = 0.2;
         downRect.alpha = 0.2;
         upRect.alpha = 0.2;
@@ -71,30 +73,31 @@ class Hitbox extends FlxGroup
         for (touch in FlxG.touches.list)
         {
             if (!touch.pressed) continue;
+
             var pos:FlxPoint = touch.getScreenPosition();
 
             if (leftRect.overlapsPoint(pos))
             {
                 leftTurbo.update(elapsed);
-                if (leftTurbo.activated) PlayState.instance.triggerNote(0);
+                if (leftTurbo.activated) PlayState.instance.triggerNoteSafe(0);
             }
 
             if (downRect.overlapsPoint(pos))
             {
                 downTurbo.update(elapsed);
-                if (downTurbo.activated) PlayState.instance.triggerNote(1);
+                if (downTurbo.activated) PlayState.instance.triggerNoteSafe(1);
             }
 
             if (upRect.overlapsPoint(pos))
             {
                 upTurbo.update(elapsed);
-                if (upTurbo.activated) PlayState.instance.triggerNote(2);
+                if (upTurbo.activated) PlayState.instance.triggerNoteSafe(2);
             }
 
             if (rightRect.overlapsPoint(pos))
             {
                 rightTurbo.update(elapsed);
-                if (rightTurbo.activated) PlayState.instance.triggerNote(3);
+                if (rightTurbo.activated) PlayState.instance.triggerNoteSafe(3);
             }
         }
     }
