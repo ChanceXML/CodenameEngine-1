@@ -661,6 +661,13 @@ class PlayState extends MusicBeatState
 		return event;
 	}
 
+	function triggerKey(key:flixel.input.keyboard.FlxKey, pressed:Bool) {
+    if (pressed)
+        FlxG.keys.onKeyDown(new openfl.events.KeyboardEvent(openfl.events.KeyboardEvent.KEY_DOWN, true, true, 0, key));
+    else
+        FlxG.keys.onKeyUp(new openfl.events.KeyboardEvent(openfl.events.KeyboardEvent.KEY_UP, true, true, 0, key));
+	}
+
 	@:dox(hide) override public function create()
 	{
 		Note.__customNoteTypeExists = [];
@@ -670,16 +677,21 @@ class PlayState extends MusicBeatState
 
 		var hitbox:HitBox;
 
-        hitbox.buttonLeft.onDown.add(() -> {   FlxG.keys.handleAction(LEFT, true); });
-        hitbox.buttonDown.onDown.add(() -> { FlxG.keys.handleAction(DOWN, true); });
-        hitbox.buttonUp.onDown.add(() -> { FlxG.keys.handleAction(UP, true); });
-        hitbox.buttonRight.onDown.add(() -> { FlxG.keys.handleAction(RIGHT, true); });
+        hitbox.buttonLeft.onDown.callback = function() { triggerKey(LEFT, true); };
+        hitbox.buttonDown.onDown.callback = function() { triggerKey(DOWN, true); };
+        hitbox.buttonUp.onDown.callback = function() { triggerKey(UP, true); };
+        hitbox.buttonRight.onDown.callback = function() { triggerKey(RIGHT, true); };
 
-        hitbox.buttonLeft.onUp.add(() -> { FlxG.keys.handleAction(LEFT, false); });
-        hitbox.buttonDown.onUp.add(() -> { FlxG.keys.handleAction(DOWN, false); });
-        hitbox.buttonUp.onUp.add(() -> { FlxG.keys.handleAction(UP, false); });
-        hitbox.buttonRight.onUp.add(() -> { FlxG.keys.handleAction(RIGHT, false); });		
+        hitbox.buttonLeft.onUp.callback = function() { triggerKey(LEFT, false); };
+        hitbox.buttonDown.onUp.callback = function() { triggerKey(DOWN, false); };
+        hitbox.buttonUp.onUp.callback = function() { triggerKey(UP, false); };
+        hitbox.buttonRight.onUp.callback = function() { triggerKey(RIGHT, false); };
 
+        hitbox.buttonLeft.onOut.callback = hitbox.buttonLeft.onUp.callback;
+        hitbox.buttonDown.onOut.callback = hitbox.buttonDown.onUp.callback;
+        hitbox.buttonUp.onOut.callback = hitbox.buttonUp.onUp.callback;
+        hitbox.buttonRight.onOut.callback = hitbox.buttonRight.onUp.callback;
+		
 		// SCRIPTING & DATA INITIALIZATION
 		#if REGION
 		instance = this;
