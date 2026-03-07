@@ -6,7 +6,7 @@ import flixel.group.FlxGroup;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import funkin.backend.TurboControls;
-import funkin.backend.system.Control;
+import funkin.backend.system.Controls;
 import funkin.options.PlayerSettings;
 import funkin.game.PlayState;
 
