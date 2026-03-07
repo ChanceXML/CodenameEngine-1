@@ -5,10 +5,10 @@ import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
-import funkins.backend.TurboControls;
-import funkins.backend.system.Control;
-import funkins.options.PlayerSettings;
-import funkins.game.PlayState;
+import funkin.backend.TurboControls;
+import funkin.backend.system.Control;
+import funkin.options.PlayerSettings;
+import funkin.game.PlayState;
 
 class Hitbox extends FlxGroup
 {
