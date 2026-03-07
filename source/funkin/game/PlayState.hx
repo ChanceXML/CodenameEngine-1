@@ -1089,22 +1089,6 @@ class PlayState extends MusicBeatState
         add(mobileControls);
 	}
 	
-    override function update(elapsed:Float) {
-    super.update(elapsed);
-
-    if (mobileControls != null) {
-        if (mobileControls.leftPressed) controls.NOTE_LEFT = true;
-        if (mobileControls.downPressed) controls.NOTE_DOWN = true;
-        if (mobileControls.upPressed) controls.NOTE_UP = true;
-        if (mobileControls.rightPressed) controls.NOTE_RIGHT = true;
-
-        if (mobileControls.leftJustPressed) controls.NOTE_LEFT_P = true;
-        if (mobileControls.downJustPressed) controls.NOTE_DOWN_P = true;
-        if (mobileControls.upJustPressed) controls.NOTE_UP_P = true;
-        if (mobileControls.rightJustPressed) controls.NOTE_RIGHT_P = true;
-    }
- } 
-	
 	public override function destroy() {
 		var notNull = stage != null;
 		if (notNull) PlayState.instance.gameAndCharsCall("onStageDestroy", [stage]);
@@ -1410,6 +1394,19 @@ class PlayState extends MusicBeatState
 			scripts.call("postUpdate", [elapsed]);
 			return;
 		}
+
+		if (mobileControls != null) {
+        if (mobileControls.leftPressed) controls.NOTE_LEFT = true;
+        if (mobileControls.downPressed) controls.NOTE_DOWN = true;
+        if (mobileControls.upPressed) controls.NOTE_UP = true;
+        if (mobileControls.rightPressed) controls.NOTE_RIGHT = true;
+
+        if (mobileControls.leftJustPressed) controls.NOTE_LEFT_P = true;
+        if (mobileControls.downJustPressed) controls.NOTE_DOWN_P = true;
+        if (mobileControls.upJustPressed) controls.NOTE_UP_P = true;
+        if (mobileControls.rightJustPressed) controls.NOTE_RIGHT_P = true;
+    }
+ } 
 
 		if (updateRatingStuff != null)
 			updateRatingStuff();
