@@ -105,6 +105,11 @@ class Main extends Sprite
 	}
 
 	public static function loadGameSettings() {
+
+		#if android
+        mobile.StorageUtil.requestPermissions();
+        #end
+	
 		WindowUtils.init();
 		SaveWarning.init();
 		MemoryUtil.init();
