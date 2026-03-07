@@ -1081,6 +1081,12 @@ class PlayState extends MusicBeatState
 
 		gameAndCharsCall("onStartSong");
 
+	    #if android
+        var hitbox = new mobile.controls.Hitbox();
+        hitbox.cameras = [camHUD];
+        add(hitbox);
+        #end
+
 		#if android
         if (Hitbox.LEFT) controls.LEFT = true;
         if (Hitbox.DOWN) controls.DOWN = true;
