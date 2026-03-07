@@ -4,7 +4,7 @@ import flixel.FlxG;
 import flixel.group.FlxSpriteGroup;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
-import mobile.backend.TouchInput;
+import mobile.controls.TouchInput;
 import funkin.game.PlayState;
 
 class Hitbox extends FlxSpriteGroup {
