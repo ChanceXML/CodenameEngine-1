@@ -25,9 +25,6 @@
 		<str id="optionsTree.debug-name">Desarrollador</str>
 		<str id="optionsTree.debug-desc">Opciones para el Modo Desarrollador.</str>
 
-		<string id="optionsTree.android-name">Opciones Para Android</string>
-        <string id="optionsTree.android-desc">Ajustes De Android.</string>
-
 		<!-- cant have debug here -->
 	</group>
 
