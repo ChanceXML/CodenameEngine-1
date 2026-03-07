@@ -3,53 +3,38 @@ package mobile.controls;
 import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.FlxSprite;
-import flixel.math.FlxRect;
 import flixel.math.FlxPoint;
+import flixel.util.FlxColor;
+import funkins.game.PlayState;
 
 class Hitbox extends FlxGroup
 {
-    var leftRect:FlxRect;
-    var downRect:FlxRect;
-    var upRect:FlxRect;
-    var rightRect:FlxRect;
+    public static var LEFT:Bool = false;
+    public static var DOWN:Bool = false;
+    public static var UP:Bool = false;
+    public static var RIGHT:Bool = false;
 
     var leftHint:FlxSprite;
     var downHint:FlxSprite;
     var upHint:FlxSprite;
     var rightHint:FlxSprite;
 
-    public static var LEFT:Bool = false;
-    public static var DOWN:Bool = false;
-    public static var UP:Bool = false;
-    public static var RIGHT:Bool = false;
-
     public function new()
     {
         super();
 
         var w = FlxG.width / 4;
+        var h = FlxG.height;
 
-        leftRect  = new FlxRect(0, 0, w, FlxG.height);
-        downRect  = new FlxRect(w, 0, w, FlxG.height);
-        upRect    = new FlxRect(w * 2, 0, w, FlxG.height);
-        rightRect = new FlxRect(w * 3, 0, w, FlxG.height);
-
-        leftHint  = makeHint(0, 0, w, FlxG.height, 0xFFFF0000);
-        downHint  = makeHint(w, 0, w, FlxG.height, 0xFF00FFFF);
-        upHint    = makeHint(w * 2, 0, w, FlxG.height, 0xFF00FF00);
-        rightHint = makeHint(w * 3, 0, w, FlxG.height, 0xFFFFFF00);
+        leftHint  = makeHint(0, 0, w, h, FlxColor.fromInts(255, 0, 0, 50));     
+        downHint  = makeHint(w, 0, w, h, FlxColor.fromInts(0, 255, 255, 50));   
+        upHint    = makeHint(w*2, 0, w, h, FlxColor.fromInts(0, 255, 0, 50));   
+        rightHint = makeHint(w*3, 0, w, h, FlxColor.fromInts(255, 255, 0, 50)); 
 
         add(leftHint);
         add(downHint);
         add(upHint);
         add(rightHint);
-
-        var hint = new FlxSprite(0, 0);
-        hint.loadGraphic("assets/images/mobile/hitbox_hint.png");
-        hint.setGraphicSize(FlxG.width, FlxG.height);
-        hint.updateHitbox();
-        hint.alpha = 0.8;
-        add(hint);
     }
 
     function makeHint(x:Float, y:Float, w:Float, h:Float, color:Int):FlxSprite
@@ -57,7 +42,9 @@ class Hitbox extends FlxGroup
         var s = new FlxSprite(x, y);
         s.makeGraphic(Std.int(w), Std.int(h), color);
         s.alpha = 0;
-        s.scrollFactor.set();
+        s.immovable = true;
+        s.moves = false;
+        s.scrollFactor.set(); 
         return s;
     }
 
@@ -76,30 +63,34 @@ class Hitbox extends FlxGroup
         {
             if (touch.pressed)
             {
-                var pos:FlxPoint = touch.getWorldPosition();
+                var pos:FlxPoint = touch.getScreenPosition(); 
 
-                if (leftRect.containsPoint(pos))
+                if (leftHint.overlapsPoint(pos)) 
                 {
                     LEFT = true;
                     leftHint.alpha = 0.2;
+                    PlayState.noteLeft();
                 }
 
-                if (downRect.containsPoint(pos))
+                if (downHint.overlapsPoint(pos)) 
                 {
                     DOWN = true;
                     downHint.alpha = 0.2;
+                    PlayState.noteDown();
                 }
 
-                if (upRect.containsPoint(pos))
+                if (upHint.overlapsPoint(pos)) 
                 {
                     UP = true;
                     upHint.alpha = 0.2;
+                    PlayState.noteUp();
                 }
 
-                if (rightRect.containsPoint(pos))
+                if (rightHint.overlapsPoint(pos)) 
                 {
                     RIGHT = true;
                     rightHint.alpha = 0.2;
+                    PlayState.noteRight();
                 }
             }
         }
