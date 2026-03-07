@@ -648,6 +648,10 @@ class PlayState extends MusicBeatState
 		});
 	}
 
+	public function hitNote(index:Int):Void {
+    keyShit(index, true);
+	}
+
 	public inline function gameAndCharsCall(func:String, ?parameters:Array<Dynamic>, ?charsFunc:String) {
 		scripts.call(func, parameters);
 		callOnCharacters(charsFunc != null ? charsFunc : func, parameters);
