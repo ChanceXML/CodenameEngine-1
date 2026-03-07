@@ -648,8 +648,8 @@ class PlayState extends MusicBeatState
 		});
 	}
 
-	public function hitNote(index:Int):Void {
-    keyShit(index, true);
+    public function hitNote(index:Int):Void {
+    keyShit(index);
 	}
 
 	public inline function gameAndCharsCall(func:String, ?parameters:Array<Dynamic>, ?charsFunc:String) {
