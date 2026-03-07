@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxColor;
+import funkin.options.Options;
 
 class HitBox extends FlxSpriteGroup {
     public var buttonLeft:HitboxButton;
