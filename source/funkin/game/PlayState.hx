@@ -12,6 +12,7 @@ import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
+import flixel.input.keyboard.FlxKey;
 import funkin.backend.FunkinText;
 import funkin.backend.chart.Chart;
 import funkin.backend.chart.ChartData;
@@ -36,6 +37,7 @@ import funkin.backend.week.WeekData;
 import funkin.savedata.FunkinSave;
 import haxe.io.Path;
 import mobile.controls.HitBox;
+import openfl.events.KeyboardEvent;
 
 using StringTools;
 
@@ -661,11 +663,13 @@ class PlayState extends MusicBeatState
 		return event;
 	}
 
-	function triggerKey(key:flixel.input.keyboard.FlxKey, pressed:Bool) {
+	
+	function triggerKey(key:FlxKey, pressed:Bool) {
+    var event = new KeyboardEvent(pressed ? KeyboardEvent.KEY_DOWN : KeyboardEvent.KEY_UP, true, true, 0, key);
     if (pressed)
-        FlxG.keys.onKeyDown(new openfl.events.KeyboardEvent(openfl.events.KeyboardEvent.KEY_DOWN, true, true, 0, key));
+        Reflect.callMethod(FlxG.keys, Reflect.field(FlxG.keys, "onKeyDown"), [event]);
     else
-        FlxG.keys.onKeyUp(new openfl.events.KeyboardEvent(openfl.events.KeyboardEvent.KEY_UP, true, true, 0, key));
+        Reflect.callMethod(FlxG.keys, Reflect.field(FlxG.keys, "onKeyUp"), [event]);
 	}
 
 	@:dox(hide) override public function create()
