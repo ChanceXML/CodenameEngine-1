@@ -691,6 +691,7 @@ class PlayState extends MusicBeatState
 
         if (hitbox.buttonRight.justPressed) triggerKey(RIGHT, true);
         if (hitbox.buttonRight.justReleased) triggerKey(RIGHT, false);
+		}
 		
 		// SCRIPTING & DATA INITIALIZATION
 		#if REGION
