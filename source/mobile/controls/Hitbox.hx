@@ -8,7 +8,7 @@ import funkins.backend.TurboKeys;
 import flixel.input.keyboard.FlxKey;
 import funkins.game.PlayState;
 
-class Hitbox : FlxGroup
+class Hitbox extends FlxGroup
 {
     #if android
     var hintBG:FlxSprite;
