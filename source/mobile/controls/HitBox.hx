@@ -14,7 +14,7 @@ class HitBox extends FlxSpriteGroup {
     public function new() {
         super();
         var w:Int = Std.int(FlxG.width / 4);
-        var h:Int = FlxG.height;
+        var h:Int = Std.int(FlxG.height);
 
         add(buttonLeft  = new HitboxButton(0, 0, w, h, 0xFFC24B99));
         add(buttonDown  = new HitboxButton(w, 0, w, h, 0xFF00FFFF));
@@ -34,7 +34,7 @@ class HitboxButton extends FlxSprite {
     public var onUp:HitboxCallback = {callback: null};
     public var onOut:HitboxCallback = {callback: null};
 
-    public var pressed:Bool = false;
+    public var isPressed:Bool = false;
     private var _wasPressed:Bool = false;
 
     public function new(x:Float, y:Float, width:Int, height:Int, color:FlxColor) {
@@ -45,21 +45,27 @@ class HitboxButton extends FlxSprite {
     }
 
     override public function update(elapsed:Float) {
-        _wasPressed = pressed;
-        pressed = false;
+        _wasPressed = isPressed;
+        isPressed = false;
 
         #if FLX_TOUCH
-        for (touch in FlxG.touches.list) if (touch.overlaps(this) && touch.pressed) pressed = true;
+        for (touch in FlxG.touches.list) {
+            if (touch.overlaps(this) && touch.pressed) {
+                isPressed = true;
+                break;
+            }
+        }
         #end
 
         #if FLX_MOUSE
-        if (FlxG.mouse.overlaps(this) && FlxG.mouse.pressed) pressed = true;
+        if (FlxG.mouse.overlaps(this) && FlxG.mouse.pressed) isPressed = true;
         #end
 
-        if (pressed && !_wasPressed && onDown.callback != null) onDown.callback();
-        if (!pressed && _wasPressed && onUp.callback != null) onUp.callback();
+        if (isPressed && !_wasPressed && onDown.callback != null) onDown.callback();
+        if (!isPressed && _wasPressed && onUp.callback != null) onUp.callback();
 
-        alpha = pressed ? 0.25 : 0.0001;
+        alpha = isPressed ? 0.25 : 0.0001;
+
         super.update(elapsed);
     }
 }
@@ -67,4 +73,3 @@ class HitboxButton extends FlxSprite {
 typedef HitboxCallback = {
     var callback:Void->Void;
 }
-    
