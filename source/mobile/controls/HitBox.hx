@@ -36,6 +36,8 @@ class HitBox extends FlxSpriteGroup {
 }
 
 class HitboxButton extends FlxButton {
+    private var _pressed:Bool = false;
+
     public function new(x:Float, y:Float, width:Int, height:Int, color:FlxColor) {
         super(x, y);
         makeGraphic(width, height, color);
@@ -43,11 +45,25 @@ class HitboxButton extends FlxButton {
     }
 
     override public function update(elapsed:Float) {
-        super.update(elapsed);
+        var isCurrentlyPressed:Bool = false;
 
-        if (status == FlxButton.PRESSED) 
-            alpha = 0.25;
-        else 
-            alpha = 0.0001;
+        #if FLX_TOUCH
+        for (touch in FlxG.touches.list) if (touch.overlaps(this) && touch.pressed) isCurrentlyPressed = true;
+        #end
+
+        #if FLX_MOUSE
+        if (FlxG.mouse.overlaps(this) && FlxG.mouse.pressed) isCurrentlyPressed = true;
+        #end
+
+        if (isCurrentlyPressed && !_pressed) {
+            if (onDown != null && onDown.callback != null) onDown.callback();
+        } else if (!isCurrentlyPressed && _pressed) {
+            if (onUp != null && onUp.callback != null) onUp.callback();
+        }
+
+        _pressed = isCurrentlyPressed;
+        alpha = _pressed ? 0.25 : 0.0001;
+
+        super.update(elapsed);
     }
 }
