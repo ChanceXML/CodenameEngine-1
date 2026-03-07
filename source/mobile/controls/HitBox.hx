@@ -33,6 +33,7 @@ class HitBox extends FlxSpriteGroup {
 class HitboxButton extends FlxSprite {
     public var onDown:HitboxCallback = {callback: null};
     public var onUp:HitboxCallback = {callback: null};
+    public var onOut:HitboxCallback = {callback: null};
 
     public var isPressed:Bool = false;
     private var _wasPressed:Bool = false;
@@ -73,4 +74,3 @@ class HitboxButton extends FlxSprite {
 typedef HitboxCallback = {
     var callback:Void->Void;
 }
-    
