@@ -1077,8 +1077,11 @@ class PlayState extends MusicBeatState
 
 		gameAndCharsCall("onStartSong");
 
-		var hitbox = new Hitbox("assets/images/hitbox_hint.png");
-        add(hitbox);
+		#if android
+		var mobileHitbox:mobile.controls.Hitbox;
+        mobileHitbox = new mobile.controls.Hitbox();
+        add(mobileHitbox);
+		#end
 	}
 
 	public override function destroy() {
