@@ -6,8 +6,8 @@ import flixel.group.FlxGroup;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.input.keyboard.FlxKey;
-import funkins.backend.TurboControls;
-import funkins.game.PlayState;
+import funkin.backend.TurboControls;
+import funkin.game.PlayState;
 
 class Hitbox extends FlxGroup
 {
