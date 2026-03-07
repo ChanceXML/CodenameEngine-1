@@ -1,50 +1,93 @@
 package mobile.controls;
 
 import flixel.FlxG;
-import flixel.group.FlxSpriteGroup;
 import flixel.FlxSprite;
+import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxColor;
-import mobile.controls.TouchInput;
 
 class Hitbox extends FlxSpriteGroup {
-    public var hitboxes:Array<FlxSprite> = [];
-    public var hint:FlxSprite;
+    public var buttonLeft:HitboxButton;
+    public var buttonDown:HitboxButton;
+    public var buttonUp:HitboxButton;
+    public var buttonRight:HitboxButton;
 
-    public function new(hintPath:String = null) {
+    public function new() {
         super();
 
-        if (hintPath != null) {
-            hint = new FlxSprite(0, 0, hintPath);
-            hint.width = FlxG.width;
-            hint.height = FlxG.height;
-            add(hint);
-        }
+        var w:Int = Std.int(FlxG.width / 4);
+        var h:Int = FlxG.height;
 
-        createHitboxes();
-        scrollFactor.set();
+        buttonLeft  = new HitboxButton(0, 0, w, h, 0xFFC24B99);
+        buttonDown  = new HitboxButton(w, 0, w, h, 0xFF00FFFF);
+        buttonUp    = new HitboxButton(w * 2, 0, w, h, 0xFF12FA05);
+        buttonRight = new HitboxButton(w * 3, 0, w, h, 0xFFF9393F);
+
+        add(buttonLeft);
+        add(buttonDown);
+        add(buttonUp);
+        add(buttonRight);
     }
 
-    function createHitboxes():Void {
-        var width = FlxG.width / 4;
-        var height = FlxG.height;
+    public var leftPressed(get, never):Bool;
+    inline function get_leftPressed() return buttonLeft.pressed;
 
-        for (i in 0...4) {
-            var hb = new FlxSprite(i * width, 0);
-            hb.makeGraphic(Std.int(width), Std.int(height), FlxColor.WHITE);
-            hb.alpha = 0;
-            add(hb);
-            hitboxes.push(hb);
-        }
+    public var leftJustPressed(get, never):Bool;
+    inline function get_leftJustPressed() return buttonLeft.justPressed;
+
+    public var downPressed(get, never):Bool;
+    inline function get_downPressed() return buttonDown.pressed;
+
+    public var downJustPressed(get, never):Bool;
+    inline function get_downJustPressed() return buttonDown.justPressed;
+
+    public var upPressed(get, never):Bool;
+    inline function get_upPressed() return buttonUp.pressed;
+
+    public var upJustPressed(get, never):Bool;
+    inline function get_upJustPressed() return buttonUp.justPressed;
+
+    public var rightPressed(get, never):Bool;
+    inline function get_rightPressed() return buttonRight.pressed;
+
+    public var rightJustPressed(get, never):Bool;
+    inline function get_rightJustPressed() return buttonRight.justPressed;
+}
+
+class HitboxButton extends FlxSprite {
+    public var pressed:Bool = false;
+    public var justPressed:Bool = false;
+    public var justReleased:Bool = false;
+
+    private var _wasPressed:Bool = false;
+
+    public function new(x:Float, y:Float, width:Int, height:Int, color:FlxColor) {
+        super(x, y);
+        makeGraphic(width, height, color);
+        this.alpha = 0.0;
+        this.scrollFactor.set(0, 0);
     }
 
-    public function updateHitboxes():Void {
-        for (i in 0...hitboxes.length) {
-            var hb = hitboxes[i];
-            if (TouchInput.pressed(hb)) {
-                hb.alpha = 0.25;
-            } else {
-                hb.alpha = 0;
+    override public function update(elapsed:Float):Void {
+        super.update(elapsed);
+
+        _wasPressed = pressed;
+        pressed = false;
+
+        #if FLX_TOUCH
+        for (touch in FlxG.touches.list) {
+            if (touch.overlaps(this)) {
+                pressed = true;
             }
         }
+        #end
+
+        #if FLX_MOUSE
+        if (FlxG.mouse.pressed && FlxG.mouse.overlaps(this)) {
+            pressed = true;
+        }
+        #end
+
+        justPressed = (pressed && !_wasPressed);
+        justReleased = (!pressed && _wasPressed);
     }
 }
