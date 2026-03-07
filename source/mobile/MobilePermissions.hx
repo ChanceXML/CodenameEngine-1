@@ -4,7 +4,7 @@ package mobile;
 import extension.androidtools.os.Build.VERSION as AndroidVersion;
 import extension.androidtools.os.Build.VERSION_CODES as AndroidVersionCode;
 import extension.androidtools.Permissions as AndroidPermissions;
-import extension.androidtools.Environment as AndroidEnvironment;
+import extension.androidtools.os.Environment as AndroidEnvironment;
 import extension.androidtools.Settings as AndroidSettings;
 #end
 
