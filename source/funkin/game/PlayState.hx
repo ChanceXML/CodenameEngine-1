@@ -50,7 +50,7 @@ class PlayState extends MusicBeatState
 	 */
 	public static var instance:PlayState = null;
 
-	var hitbox:HitBox;
+	public var hitbox:HitBox;
 
 	/**
 	 * SONG DATA (Chart, Metadata).
@@ -678,8 +678,6 @@ class PlayState extends MusicBeatState
 
 		hitbox = new HitBox();
         add(hitbox);
-
-		var hitbox:HitBox;
 
         hitbox.buttonLeft.onDown.callback = function() { triggerKey(LEFT, true); };
         hitbox.buttonDown.onDown.callback = function() { triggerKey(DOWN, true); };
