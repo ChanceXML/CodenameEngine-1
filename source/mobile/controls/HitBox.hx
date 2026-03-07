@@ -13,13 +13,14 @@ class HitBox extends FlxSpriteGroup {
 
     public function new() {
         super();
-        var w:Int = Std.int(FlxG.width / 4);
-        var h:Int = Std.int(FlxG.height);
+
+        var w:Int = 480; 
+        var h:Int = 1080;
 
         add(buttonLeft  = new HitboxButton(0, 0, w, h, 0xFFC24B99));
-        add(buttonDown  = new HitboxButton(w, 0, w, h, 0xFF00FFFF));
-        add(buttonUp    = new HitboxButton(w * 2, 0, w, h, 0xFF12FA05));
-        add(buttonRight = new HitboxButton(w * 3, 0, w, h, 0xFFF9393F));
+        add(buttonDown  = new HitboxButton(480, 0, w, h, 0xFF00FFFF));
+        add(buttonUp    = new HitboxButton(960, 0, w, h, 0xFF12FA05));
+        add(buttonRight = new HitboxButton(1440, 0, w, h, 0xFFF9393F));
         
         scrollFactor.set();
     }
@@ -32,7 +33,6 @@ class HitBox extends FlxSpriteGroup {
 class HitboxButton extends FlxSprite {
     public var onDown:HitboxCallback = {callback: null};
     public var onUp:HitboxCallback = {callback: null};
-    public var onOut:HitboxCallback = {callback: null};
 
     public var isPressed:Bool = false;
     private var _wasPressed:Bool = false;
@@ -40,7 +40,7 @@ class HitboxButton extends FlxSprite {
     public function new(x:Float, y:Float, width:Int, height:Int, color:FlxColor) {
         super(x, y);
         makeGraphic(width, height, color);
-        alpha = 0.0001;
+        alpha = 0.00001;
         antialiasing = false;
     }
 
@@ -64,7 +64,7 @@ class HitboxButton extends FlxSprite {
         if (isPressed && !_wasPressed && onDown.callback != null) onDown.callback();
         if (!isPressed && _wasPressed && onUp.callback != null) onUp.callback();
 
-        alpha = isPressed ? 0.25 : 0.0001;
+        alpha = isPressed ? 0.25 : 0.00001;
 
         super.update(elapsed);
     }
@@ -73,3 +73,4 @@ class HitboxButton extends FlxSprite {
 typedef HitboxCallback = {
     var callback:Void->Void;
 }
+    
