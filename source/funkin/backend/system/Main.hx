@@ -29,6 +29,7 @@ import extension.androidtools.os.Build;
 import extension.androidtools.Permissions;
 import extension.androidtools.os.Environment;
 import extension.androidtools.Settings;
+import mobile.MobilePermissions;
 #end
 
 class Main extends Sprite
