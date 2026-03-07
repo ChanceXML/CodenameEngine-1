@@ -679,20 +679,18 @@ class PlayState extends MusicBeatState
 		hitbox = new HitBox();
         add(hitbox);
 
-        hitbox.buttonLeft.onDown.callback = function() { triggerKey(LEFT, true); };
-        hitbox.buttonDown.onDown.callback = function() { triggerKey(DOWN, true); };
-        hitbox.buttonUp.onDown.callback = function() { triggerKey(UP, true); };
-        hitbox.buttonRight.onDown.callback = function() { triggerKey(RIGHT, true); };
+        if (hitbox != null) {
+        if (hitbox.buttonLeft.justPressed) triggerKey(LEFT, true);
+        if (hitbox.buttonLeft.justReleased) triggerKey(LEFT, false);
 
-        hitbox.buttonLeft.onUp.callback = function() { triggerKey(LEFT, false); };
-        hitbox.buttonDown.onUp.callback = function() { triggerKey(DOWN, false); };
-        hitbox.buttonUp.onUp.callback = function() { triggerKey(UP, false); };
-        hitbox.buttonRight.onUp.callback = function() { triggerKey(RIGHT, false); };
+        if (hitbox.buttonDown.justPressed) triggerKey(DOWN, true);
+        if (hitbox.buttonDown.justReleased) triggerKey(DOWN, false);
 
-        hitbox.buttonLeft.onOut.callback = hitbox.buttonLeft.onUp.callback;
-        hitbox.buttonDown.onOut.callback = hitbox.buttonDown.onUp.callback;
-        hitbox.buttonUp.onOut.callback = hitbox.buttonUp.onUp.callback;
-        hitbox.buttonRight.onOut.callback = hitbox.buttonRight.onUp.callback;
+        if (hitbox.buttonUp.justPressed) triggerKey(UP, true);
+        if (hitbox.buttonUp.justReleased) triggerKey(UP, false);
+
+        if (hitbox.buttonRight.justPressed) triggerKey(RIGHT, true);
+        if (hitbox.buttonRight.justReleased) triggerKey(RIGHT, false);
 		
 		// SCRIPTING & DATA INITIALIZATION
 		#if REGION
