@@ -683,6 +683,7 @@ class PlayState extends MusicBeatState
         hint.loadGraphic(Paths.image('mobile/hitbox_hint'));
         hint.antialiasing = true;
         hint.cameras = [camHUD];
+		hint.visible = Options.hitboxHints;
         add(hint);
 
         hitbox.buttonLeft.onDown.callback = function() { triggerKey(LEFT, true); };
