@@ -16,18 +16,18 @@ class Hitbox extends FlxSpriteGroup {
 
         if (hintPath != null) {
             hint = new FlxSprite(0, 0, hintPath);
-            hint.setSize(FlxG.width, FlxG.height);
+            hint.width = FlxG.width;
+            hint.height = FlxG.height;
             add(hint);
         }
 
         createHitboxes();
 
-        PlayState.instance.onStep.add(() -> {
-            updateHitboxes();
-        });
+        if (PlayState.instance != null)
+            PlayState.instance.onStep.add(() -> updateHitboxes());
     }
 
-    function createHitboxes() {
+    function createHitboxes():Void {
         var width = FlxG.width / 4;
         var height = FlxG.height;
 
@@ -51,4 +51,4 @@ class Hitbox extends FlxSpriteGroup {
             }
         }
     }
-                                      }
+}
