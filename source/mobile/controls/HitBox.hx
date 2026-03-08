@@ -80,7 +80,7 @@ class HitboxButton extends FlxSprite {
 
     super.update(elapsed);
     }
-
+  }
 typedef HitboxCallback = {
     var callback:Void->Void;
 }
