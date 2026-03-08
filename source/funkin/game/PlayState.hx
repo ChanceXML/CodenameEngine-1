@@ -679,6 +679,7 @@ class PlayState extends MusicBeatState
 
 		hitbox = new HitBox();
         add(hitbox);
+		hitbox.setupCamera();
 		
         hitbox.buttonLeft.onDown.callback = function() { triggerKey(LEFT, true); };
         hitbox.buttonDown.onDown.callback = function() { triggerKey(DOWN, true); };
