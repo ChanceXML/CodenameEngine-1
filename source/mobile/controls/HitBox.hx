@@ -73,22 +73,22 @@ class HitboxButton extends FlxSprite {
 
         #if FLX_TOUCH
         for (touch in FlxG.touches.list) {
-            var localX = hitboxCamera.getWorldPosition().x + touch.screenX / hitboxCamera.zoom;
-            var localY = hitboxCamera.getWorldPosition().y + touch.screenY / hitboxCamera.zoom;
-            if (localX >= x && localX <= x + width && localY >= y && localY <= y + height) {
-                isPressed = true;
-                break;
-            }
-        }
-        #end
+           var localX = hitboxCamera.scroll.x + touch.screenX / hitboxCamera.zoom;
+           var localY = hitboxCamera.scroll.y + touch.screenY / hitboxCamera.zoom;
+           if (localX >= x && localX <= x + width && localY >= y && localY <= y + height) {
+           isPressed = true;
+        break;
+      }
+    }
+#end
 
-        #if FLX_MOUSE
-        var localX = hitboxCamera.getWorldPosition().x + FlxG.mouse.screenX / hitboxCamera.zoom;
-        var localY = hitboxCamera.getWorldPosition().y + FlxG.mouse.screenY / hitboxCamera.zoom;
-        if (localX >= x && localX <= x + width && localY >= y && localY <= y + height && FlxG.mouse.pressed)
-            isPressed = true;
-        #end
-
+       #if FLX_MOUSE
+           var localX = hitboxCamera.scroll.x + FlxG.mouse.screenX / hitboxCamera.zoom;
+           var localY = hitboxCamera.scroll.y + FlxG.mouse.screenY / hitboxCamera.zoom;
+           if (localX >= x && localX <= x + width && localY >= y && localY <= y + height && FlxG.mouse.pressed)
+       isPressed = true;
+       #end
+    
         if (isPressed && !_wasPressed && onDown.callback != null)
             onDown.callback();
         if (!isPressed && _wasPressed && onUp.callback != null)
