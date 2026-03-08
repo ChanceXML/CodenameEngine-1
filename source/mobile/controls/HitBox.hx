@@ -7,6 +7,9 @@ import flixel.util.FlxColor;
 import funkin.options.Options;
 
 class HitBox extends FlxSpriteGroup {
+
+    public var hitboxCamera:FlxCamera;
+
     public var buttonLeft:HitboxButton;
     public var buttonDown:HitboxButton;
     public var buttonUp:HitboxButton;
@@ -14,6 +17,10 @@ class HitBox extends FlxSpriteGroup {
 
     public function new() {
         super();
+
+        hitboxCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
+        hitboxCamera.scroll.set(0, 0);
+        FlxG.cameras.add(hitboxCamera);
 
         var w:Int = Std.int(FlxG.width / 4);
         var h:Int = FlxG.height;
