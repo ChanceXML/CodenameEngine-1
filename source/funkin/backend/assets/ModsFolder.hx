@@ -27,7 +27,7 @@ class ModsFolder {
 	/**
 	 * Path to the `mods` folder.
 	 */
-	public static var modsPath:String = "./mods/";
+	public static var modsPath:String = getDefaultModsPath();
 	/**
 	 * Path to the `addons` folder.
 	 */
@@ -174,4 +174,14 @@ class ModsFolder {
 		return prepareModLibrary(libName, new ZipFolderLibrary(zipPath, libName, modName), force, tag);
 	}
 	#end
+}
+
+    private static function getDefaultModsPath():String {
+    #if android
+    var packageName = "com.yoshman29.codenameengine";
+    return "/sdcard/Android/data/" + packageName + "/files/mods/";
+    #else
+    return "./mods/";
+    #end
+}
 }
