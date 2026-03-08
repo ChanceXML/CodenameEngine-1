@@ -120,13 +120,13 @@ class AssetsLibraryList extends AssetLibrary {
 				if (shouldSkipLib(l, source)) continue;
 
 				@:privateAccess
-				if (l.exists(id, l.types.get(id))) {
-					var asset = l.getAsset(id, type);
-					if (asset != null) {
-						return asset;
-					}
-				}
-			}
+				if (l.exists(id, type)) {
+             	var asset = l.getAsset(id, type);
+            	if (asset != null) {
+		        return asset;
+	            }
+			   }
+		      }
 			return null;
 		} catch(e) {
 			// TODO: trace the error
