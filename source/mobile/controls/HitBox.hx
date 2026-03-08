@@ -47,30 +47,39 @@ class HitboxButton extends FlxSprite {
     }
 
     override public function update(elapsed:Float) {
-        _wasPressed = isPressed;
-        isPressed = false;
+    _wasPressed = isPressed;
+    isPressed = false;
 
-        #if FLX_TOUCH
-        for (touch in FlxG.touches.list) {
-            if (touch.overlaps(this) && touch.pressed) {
-                isPressed = true;
-                break;
-            }
+    #if FLX_TOUCH
+    for (touch in FlxG.touches.list) {
+        if (touch.overlaps(this) && touch.pressed) {
+            isPressed = true;
+            break;
         }
-        #end
+    }
+    #end
 
-        #if FLX_MOUSE
-        if (FlxG.mouse.overlaps(this) && FlxG.mouse.pressed) isPressed = true;
-        #end
+    #if FLX_MOUSE
+    if (FlxG.mouse.overlaps(this) && FlxG.mouse.pressed)
+        isPressed = true;
+    #end
 
-        if (isPressed)
+    if (isPressed && !_wasPressed && onDown.callback != null)
+        onDown.callback();
+
+    if (!isPressed && _wasPressed && onUp.callback != null)
+        onUp.callback();
+
+    if (!isPressed && _wasPressed && onOut.callback != null)
+        onOut.callback();
+
+    if (isPressed)
         alpha = Options.hitboxOpacity;
-        else
+    else
         alpha = 0.00001;
 
-        super.update(elapsed);
+    super.update(elapsed);
     }
-}
 
 typedef HitboxCallback = {
     var callback:Void->Void;
