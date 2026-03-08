@@ -175,7 +175,7 @@ class ModsFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 	}
 }
 
-private function getAssetPath() {
+public function getAssetPath();String {
      	var p = '$basePath/$_parsedAsset';
     	trace("MOD ASSET PATH: " + p);
 	    return p;
