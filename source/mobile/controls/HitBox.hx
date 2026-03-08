@@ -31,14 +31,12 @@ class HitBox extends FlxSpriteGroup {
         hitboxCamera.scroll.set(0, 0);
         hitboxCamera.bgColor = 0x00000000;
 
-        FlxCamera.defaultCameras = [FlxG.camera];
-
-        for(button in [buttonLeft, buttonDown, buttonUp, buttonRight]) {
+        for(button in [buttonLeft, buttonDown, buttonUp, buttonRight])
             button.cameras = [hitboxCamera];
-            button.screenSpace = true;
-        }
 
         scrollFactor.set();
+
+        FlxCamera.defaultCameras = [FlxG.camera];
     }
 
     public function setupCamera():Void {
@@ -64,7 +62,6 @@ class HitboxButton extends FlxSprite {
         makeGraphic(width, height, color);
         alpha = 0.00001;
         antialiasing = false;
-        screenSpace = true;
     }
 
     override public function update(elapsed:Float) {
@@ -93,7 +90,7 @@ class HitboxButton extends FlxSprite {
             onOut.callback();
 
         alpha = isPressed ? Options.hitboxOpacity : 0.00001;
-        
+
         super.update(elapsed);
     }
 }
