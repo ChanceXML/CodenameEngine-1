@@ -164,7 +164,11 @@ class ModsFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 	}
 	#end
 
-	// Backwards compat
+	public function getAssetPath();String {
+     	var p = '$basePath/$_parsedAsset';
+    	trace("MOD ASSET PATH: " + p);
+	    return p;
+	}
 
 	@:noCompletion public var folderPath(get, set):String;
 	@:noCompletion private inline function get_folderPath():String {
@@ -173,10 +177,4 @@ class ModsFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 	@:noCompletion private inline function set_folderPath(value:String):String {
 		return basePath = value;
 	}
-}
-
-public function getAssetPath();String {
-     	var p = '$basePath/$_parsedAsset';
-    	trace("MOD ASSET PATH: " + p);
-	    return p;
 }
