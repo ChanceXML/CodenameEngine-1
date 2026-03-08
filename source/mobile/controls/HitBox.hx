@@ -75,12 +75,10 @@ class HitboxButton extends FlxSprite {
         _wasPressed = isPressed;
         isPressed = false;
 
-        var oldCams = FlxCamera.defaultCameras;
-        FlxCamera.defaultCameras = [hitboxCamera];
-
         #if FLX_TOUCH
         for (touch in FlxG.touches.list) {
-            if (touch.overlaps(this)) {
+            if (touch.screenX >= this.x && touch.screenX < this.x + this.width &&
+                touch.screenY >= this.y && touch.screenY < this.y + this.height) {
                 isPressed = true;
                 break;
             }
@@ -88,11 +86,13 @@ class HitboxButton extends FlxSprite {
         #end
 
         #if FLX_MOUSE
-        if (FlxG.mouse.overlaps(this) && FlxG.mouse.pressed)
-            isPressed = true;
+        if (FlxG.mouse.pressed) {
+            if (FlxG.mouse.screenX >= this.x && FlxG.mouse.screenX < this.x + this.width &&
+                FlxG.mouse.screenY >= this.y && FlxG.mouse.screenY < this.y + this.height) {
+                isPressed = true;
+            }
+        }
         #end
-
-        FlxCamera.defaultCameras = oldCams;
 
         if (isPressed && !_wasPressed && onDown.callback != null)
             onDown.callback();
