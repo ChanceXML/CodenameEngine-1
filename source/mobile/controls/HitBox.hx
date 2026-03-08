@@ -17,26 +17,25 @@ class HitBox extends FlxSpriteGroup {
     public var buttonRight:HitboxButton;
 
     public function new() {
-        super();
+    super();
 
-        var w:Int = Std.int(FlxG.width / 4);
-        var h:Int = FlxG.height;
+    var w:Int = Std.int(FlxG.width / 4);
+    var h:Int = FlxG.height;
 
-        add(buttonLeft  = new HitboxButton(0, 0, w, h, 0xFFC24B99));
-        add(buttonDown  = new HitboxButton(w, 0, w, h, 0xFF00FFFF));
-        add(buttonUp    = new HitboxButton(w * 2, 0, w, h, 0xFF12FA05));
-        add(buttonRight = new HitboxButton(w * 3, 0, w, h, 0xFFF9393F));
+    add(buttonLeft  = new HitboxButton(0, 0, w, h, 0xFFC24B99));
+    add(buttonDown  = new HitboxButton(w, 0, w, h, 0xFF00FFFF));
+    add(buttonUp    = new HitboxButton(w * 2, 0, w, h, 0xFF12FA05));
+    add(buttonRight = new HitboxButton(w * 3, 0, w, h, 0xFFF9393F));
 
-        hitboxCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
-        hitboxCamera.scroll.set(0, 0);
+    hitboxCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
+    hitboxCamera.scroll.set(0, 0);
 
-        for(button in [buttonLeft, buttonDown, buttonUp, buttonRight])
-            button.cameras = [hitboxCamera];
+    for(button in [buttonLeft, buttonDown, buttonUp, buttonRight])
+        button.cameras = [hitboxCamera];
 
-        FlxG.cameras.add(hitboxCamera);
+    FlxG.cameras.add(hitboxCamera);
 
-        cameras = [hitboxCamera];
-        scrollFactor.set();
+    scrollFactor.set();
     }
 
     public static function BACK():Bool {
