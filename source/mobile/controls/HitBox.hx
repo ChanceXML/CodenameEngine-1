@@ -22,18 +22,19 @@ class HitBox extends FlxSpriteGroup {
         var w:Int = Std.int(FlxG.width / 4);
         var h:Int = FlxG.height;
 
+        add(buttonLeft  = new HitboxButton(0, 0, w, h, 0xFFC24B99));
+        add(buttonDown  = new HitboxButton(w, 0, w, h, 0xFF00FFFF));
+        add(buttonUp    = new HitboxButton(w * 2, 0, w, h, 0xFF12FA05));
+        add(buttonRight = new HitboxButton(w * 3, 0, w, h, 0xFFF9393F));
+
         hitboxCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
-        hitboxCamera.zoom = 1.0;
         hitboxCamera.scroll.set(0, 0);
         hitboxCamera.bgColor = 0x00000000;
 
-        add(buttonLeft  = new HitboxButton(0, 0, w, h, 0xFFC24B99, hitboxCamera));
-        add(buttonDown  = new HitboxButton(w, 0, w, h, 0xFF00FFFF, hitboxCamera));
-        add(buttonUp    = new HitboxButton(w * 2, 0, w, h, 0xFF12FA05, hitboxCamera));
-        add(buttonRight = new HitboxButton(w * 3, 0, w, h, 0xFFF9393F, hitboxCamera));
-
-        for(button in [buttonLeft, buttonDown, buttonUp, buttonRight])
+        for(button in [buttonLeft, buttonDown, buttonUp, buttonRight]) {
             button.cameras = [hitboxCamera];
+            button.screenSpace = true;
+        }
 
         scrollFactor.set();
 
@@ -42,7 +43,7 @@ class HitBox extends FlxSpriteGroup {
 
     public function setupCamera():Void {
         if(!FlxG.cameras.list.contains(hitboxCamera))
-            FlxG.cameras.add(hitboxCamera, false);
+            FlxG.cameras.add(hitboxCamera);
     }
 
     public static function BACK():Bool {
@@ -51,8 +52,6 @@ class HitBox extends FlxSpriteGroup {
 }
 
 class HitboxButton extends FlxSprite {
-
-    public var hitboxCamera:FlxCamera;
     public var onDown:HitboxCallback = {callback: null};
     public var onUp:HitboxCallback = {callback: null};
     public var onOut:HitboxCallback = {callback: null};
@@ -60,19 +59,12 @@ class HitboxButton extends FlxSprite {
     public var isPressed:Bool = false;
     private var _wasPressed:Bool = false;
 
-    public function new(x:Float, y:Float, width:Int, height:Int, color:FlxColor, camera:FlxCamera) {
+    public function new(x:Float, y:Float, width:Int, height:Int, color:FlxColor) {
         super(x, y);
         makeGraphic(width, height, color);
         alpha = 0;
         antialiasing = false;
-        hitboxCamera = camera;
-    }
-
-    private function screenToWorld(screenX:Float, screenY:Float):{x:Float, y:Float} {
-        return {
-            x: hitboxCamera.scroll.x + screenX,
-            y: hitboxCamera.scroll.y + screenY
-        };
+        screenSpace = true;
     }
 
     override public function update(elapsed:Float) {
@@ -81,8 +73,8 @@ class HitboxButton extends FlxSprite {
 
         #if FLX_TOUCH
         for (touch in FlxG.touches.list) {
-            var world = screenToWorld(touch.screenX, touch.screenY);
-            if (world.x >= x && world.x <= x + width && world.y >= y && world.y <= y + height) {
+            if (touch.screenX >= x && touch.screenX <= x + width &&
+                touch.screenY >= y && touch.screenY <= y + height) {
                 isPressed = true;
                 break;
             }
@@ -90,17 +82,21 @@ class HitboxButton extends FlxSprite {
         #end
 
         #if FLX_MOUSE
-        var world = screenToWorld(FlxG.mouse.screenX, FlxG.mouse.screenY);
-        if (world.x >= x && world.x <= x + width && world.y >= y && world.y <= y + height && FlxG.mouse.pressed)
+        if (FlxG.mouse.screenX >= x && FlxG.mouse.screenX <= x + width &&
+            FlxG.mouse.screenY >= y && FlxG.mouse.screenY <= y + height &&
+            FlxG.mouse.pressed) {
             isPressed = true;
+        }
         #end
 
-        if (isPressed && !_wasPressed && onDown.callback != null) onDown.callback();
-        if (!isPressed && _wasPressed && onUp.callback != null) onUp.callback();
-        if (!isPressed && _wasPressed && onOut.callback != null) onOut.callback();
+        if (isPressed && !_wasPressed && onDown.callback != null)
+            onDown.callback();
+        if (!isPressed && _wasPressed && onUp.callback != null)
+            onUp.callback();
+        if (!isPressed && _wasPressed && onOut.callback != null)
+            onOut.callback();
 
-        alpha = isPressed ? Options.hitboxOpacity : 0;
-
+        alpha = if (isPressed) Options.hitboxOpacity else 0;
         super.update(elapsed);
     }
 }
