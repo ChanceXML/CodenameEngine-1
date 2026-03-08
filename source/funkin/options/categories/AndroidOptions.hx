@@ -4,7 +4,7 @@ import flixel.FlxG;
 import funkin.options.Options;
 import funkin.ui.menu.Checkbox;
 import funkin.ui.menu.SliderOption;
-
+// android options
 class AndroidOptions extends TreeMenuScreen {
 
     public function new() {
