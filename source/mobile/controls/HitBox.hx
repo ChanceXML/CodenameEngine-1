@@ -31,6 +31,8 @@ class HitBox extends FlxSpriteGroup {
         hitboxCamera.scroll.set(0, 0);
         hitboxCamera.bgColor = 0x00000000;
 
+        FlxCamera.defaultCameras = [FlxG.camera];
+
         for(button in [buttonLeft, buttonDown, buttonUp, buttonRight])
             button.cameras = [hitboxCamera];
 
