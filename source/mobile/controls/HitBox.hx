@@ -35,6 +35,7 @@ class HitBox extends FlxSpriteGroup {
             button.cameras = [hitboxCamera];
 
         scrollFactor.set();
+
         FlxCamera.defaultCameras = [FlxG.camera];
     }
 
@@ -51,7 +52,6 @@ class HitBox extends FlxSpriteGroup {
 class HitboxButton extends FlxSprite {
 
     public var hitboxCamera:FlxCamera;
-
     public var onDown:HitboxCallback = {callback: null};
     public var onUp:HitboxCallback = {callback: null};
     public var onOut:HitboxCallback = {callback: null};
@@ -62,9 +62,16 @@ class HitboxButton extends FlxSprite {
     public function new(x:Float, y:Float, width:Int, height:Int, color:FlxColor, camera:FlxCamera) {
         super(x, y);
         makeGraphic(width, height, color);
-        alpha = 0.00001;
+        alpha = 0; // hidden by default
         antialiasing = false;
         hitboxCamera = camera;
+    }
+
+    private function screenToWorld(screenX:Float, screenY:Float):{x:Float, y:Float} {
+        return {
+            x: hitboxCamera.scroll.x + screenX / hitboxCamera.zoom,
+            y: hitboxCamera.scroll.y + screenY / hitboxCamera.zoom
+        };
     }
 
     override public function update(elapsed:Float) {
@@ -73,9 +80,8 @@ class HitboxButton extends FlxSprite {
 
         #if FLX_TOUCH
         for (touch in FlxG.touches.list) {
-            var localX = hitboxCamera.scroll.x + touch.screenX / hitboxCamera.zoom;
-            var localY = hitboxCamera.scroll.y + touch.screenY / hitboxCamera.zoom;
-            if (localX >= x && localX <= x + width && localY >= y && localY <= y + height) {
+            var world = screenToWorld(touch.screenX, touch.screenY);
+            if (world.x >= x && world.x <= x + width && world.y >= y && world.y <= y + height) {
                 isPressed = true;
                 break;
             }
@@ -83,9 +89,8 @@ class HitboxButton extends FlxSprite {
         #end
 
         #if FLX_MOUSE
-        var localX = hitboxCamera.scroll.x + FlxG.mouse.screenX / hitboxCamera.zoom;
-        var localY = hitboxCamera.scroll.y + FlxG.mouse.screenY / hitboxCamera.zoom;
-        if (localX >= x && localX <= x + width && localY >= y && localY <= y + height && FlxG.mouse.pressed)
+        var world = screenToWorld(FlxG.mouse.screenX, FlxG.mouse.screenY);
+        if (world.x >= x && world.x <= x + width && world.y >= y && world.y <= y + height && FlxG.mouse.pressed)
             isPressed = true;
         #end
 
@@ -93,7 +98,7 @@ class HitboxButton extends FlxSprite {
         if (!isPressed && _wasPressed && onUp.callback != null) onUp.callback();
         if (!isPressed && _wasPressed && onOut.callback != null) onOut.callback();
 
-        alpha = Options.hitboxOpacity;
+        alpha = isPressed ? Options.hitboxOpacity : 0;
 
         super.update(elapsed);
     }
