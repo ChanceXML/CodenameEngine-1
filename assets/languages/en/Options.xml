@@ -67,12 +67,12 @@
 		</group>
 	</group>
    <group name="AndroidOptions" prefix="AndroidOptions">
-		<str id="hitboxHints">Hitbox Hints</str>
-		<str id="hitboxHints-desc">Enable Hitbox Hints That Show Where To Click</str>
-		
-		<str id="hitboxOpacity">Hitbox Opacity</str>
-		<str id="hitboxOpacity-desc">Pretty self explanatory, isn't it?</str>
-  </group>
+    <str id="HITBOXHINT">Hitbox Hints</str>
+    <str id="HITBOXHINT-desc">Enable Hitbox Hints That Show Where To Click</str>
+    
+    <str id="HITBOXOPACITY">Hitbox Opacity</str>
+    <str id="HITBOXOPACITY-desc">Pretty self explanatory, isn't it?</str>
+   </group>
 	<group name="AppearanceOptions" prefix="AppearanceOptions.">
 		<str id="framerate-name">Framerate</str>
 		<str id="framerate-desc">Pretty self explanatory, isn't it?</str>
