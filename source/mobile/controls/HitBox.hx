@@ -5,6 +5,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxColor;
 import flixel.FlxCamera;
+import flixel.math.FlxPoint;
 import funkin.options.Options;
 
 typedef HitboxCallback = {
@@ -12,7 +13,6 @@ typedef HitboxCallback = {
 }
 
 class HitBox extends FlxSpriteGroup {
-
     public var hitboxCamera:FlxCamera;
 
     public var buttonLeft:HitboxButton;
@@ -24,27 +24,41 @@ class HitBox extends FlxSpriteGroup {
         super();
 
         var w:Int = Std.int(FlxG.width / 4);
-        var h:Int = FlxG.height;
+        var h:Int = Std.int(FlxG.height);
 
         hitboxCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
-        hitboxCamera.scroll.set(0, 0);
         hitboxCamera.bgColor = 0x00000000;
+        hitboxCamera.alpha = 1;
+        
+        buttonLeft = new HitboxButton(0, 0, w, h, 0xFFC24B99, hitboxCamera);
+        buttonDown = new HitboxButton(w, 0, w, h, 0xFF00FFFF, hitboxCamera);
+        buttonUp = new HitboxButton(w * 2, 0, w, h, 0xFF12FA05, hitboxCamera);
+        buttonRight = new HitboxButton(w * 3, 0, w, h, 0xFFF9393F, hitboxCamera);
 
-        add(buttonLeft  = new HitboxButton(0, 0, w, h, 0xFFC24B99, hitboxCamera));
-        add(buttonDown  = new HitboxButton(w, 0, w, h, 0xFF00FFFF, hitboxCamera));
-        add(buttonUp    = new HitboxButton(w * 2, 0, w, h, 0xFF12FA05, hitboxCamera));
-        add(buttonRight = new HitboxButton(w * 3, 0, w, h, 0xFFF9393F, hitboxCamera));
+        add(buttonLeft);
+        add(buttonDown);
+        add(buttonUp);
+        add(buttonRight);
 
-        for(button in [buttonLeft, buttonDown, buttonUp, buttonRight])
+        for (button in [buttonLeft, buttonDown, buttonUp, buttonRight]) {
             button.cameras = [hitboxCamera];
+            button.scrollFactor.set(0, 0);
+        }
 
-        scrollFactor.set();
-        FlxCamera.defaultCameras = [FlxG.camera];
+        this.scrollFactor.set(0, 0);
     }
 
     public function setupCamera():Void {
-        if(!FlxG.cameras.list.contains(hitboxCamera))
-            FlxG.cameras.add(hitboxCamera);
+        if (!FlxG.cameras.list.contains(hitboxCamera)) {
+            FlxG.cameras.add(hitboxCamera, false);
+        }
+    }
+
+    override public function destroy():Void {
+        super.destroy();
+        if (FlxG.cameras.list.contains(hitboxCamera)) {
+            FlxG.cameras.remove(hitboxCamera);
+        }
     }
 
     public static function BACK():Bool {
@@ -53,7 +67,6 @@ class HitBox extends FlxSpriteGroup {
 }
 
 class HitboxButton extends FlxSprite {
-
     public var onDown:HitboxCallback = {callback: null};
     public var onUp:HitboxCallback = {callback: null};
     public var onOut:HitboxCallback = {callback: null};
@@ -61,48 +74,77 @@ class HitboxButton extends FlxSprite {
     public var isPressed:Bool = false;
     private var _wasPressed:Bool = false;
 
-    public var hitboxCamera:FlxCamera;
+    private var _assignedCamera:FlxCamera;
+    private var _touchPoint:FlxPoint = new FlxPoint();
 
-    public function new(x:Float, y:Float, width:Int, height:Int, color:FlxColor, hitboxCamera:FlxCamera) {
+    public function new(x:Float, y:Float, width:Int, height:Int, color:FlxColor, camera:FlxCamera) {
         super(x, y);
+        
+        _assignedCamera = camera;
+        
         makeGraphic(width, height, color);
         alpha = 0.00001;
         antialiasing = false;
-        this.hitboxCamera = hitboxCamera;
     }
 
     override public function update(elapsed:Float) {
         _wasPressed = isPressed;
         isPressed = false;
 
+        checkInputs();
+
+        if (isPressed && !_wasPressed) {
+            if (onDown.callback != null) onDown.callback();
+        } 
+        else if (!isPressed && _wasPressed) {
+            if (onUp.callback != null) onUp.callback();
+            if (onOut.callback != null) onOut.callback();
+        }
+
+        if (Options.hitboxHints) {
+            alpha = isPressed ? Options.hitboxOpacity : 0.00001;
+        } else {
+            alpha = 0.00001;
+        }
+
+        super.update(elapsed);
+    }
+
+    private function checkInputs():Void {
         #if FLX_TOUCH
         for (touch in FlxG.touches.list) {
-            if (touch.screenX >= this.x && touch.screenX < this.x + this.width &&
-                touch.screenY >= this.y && touch.screenY < this.y + this.height) {
+            touch.getWorldPosition(_assignedCamera, _touchPoint);
+            if (overlapPointCheck(_touchPoint)) {
                 isPressed = true;
-                break;
+                return;
             }
         }
         #end
 
         #if FLX_MOUSE
         if (FlxG.mouse.pressed) {
-            if (FlxG.mouse.screenX >= this.x && FlxG.mouse.screenX < this.x + this.width &&
-                FlxG.mouse.screenY >= this.y && FlxG.mouse.screenY < this.y + this.height) {
+            FlxG.mouse.getWorldPosition(_assignedCamera, _touchPoint);
+            if (overlapPointCheck(_touchPoint)) {
                 isPressed = true;
             }
         }
         #end
+    }
 
-        if (isPressed && !_wasPressed && onDown.callback != null)
-            onDown.callback();
-        if (!isPressed && _wasPressed && onUp.callback != null)
-            onUp.callback();
-        if (!isPressed && _wasPressed && onOut.callback != null)
-            onOut.callback();
+    private function overlapPointCheck(point:FlxPoint):Bool {
+        var left:Float = x;
+        var right:Float = x + width;
+        var top:Float = y;
+        var bottom:Float = y + height;
 
-        alpha = (isPressed && Options.hitboxHints) ? Options.hitboxOpacity : 0.00001;
-        
-        super.update(elapsed);
+        if (point.x >= left && point.x <= right && point.y >= top && point.y <= bottom) {
+            return true;
+        }
+        return false;
+    }
+
+    override public function destroy():Void {
+        _touchPoint = null;
+        super.destroy();
     }
 }
