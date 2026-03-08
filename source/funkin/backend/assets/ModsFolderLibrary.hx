@@ -110,7 +110,9 @@ class ModsFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 	}
 
 	private function getAssetPath() {
-		return '$basePath/$_parsedAsset';
+     	var p = '$basePath/$_parsedAsset';
+    	trace("MOD ASSET PATH: " + p);
+	    return p;
 	}
 
 	private function __isCacheValid(cache:Map<String, Dynamic>, asset:String, isLocalCache:Bool = false) {
