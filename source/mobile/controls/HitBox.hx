@@ -23,6 +23,7 @@ class HitBox extends FlxSpriteGroup {
         var h:Int = FlxG.height;
 
         hitboxCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
+        hitboxCamera.zoom = 1.0;
         hitboxCamera.scroll.set(0, 0);
         hitboxCamera.bgColor = 0x00000000;
 
@@ -41,7 +42,7 @@ class HitBox extends FlxSpriteGroup {
 
     public function setupCamera():Void {
         if(!FlxG.cameras.list.contains(hitboxCamera))
-            FlxG.cameras.add(hitboxCamera);
+            FlxG.cameras.add(hitboxCamera, false);
     }
 
     public static function BACK():Bool {
@@ -62,15 +63,15 @@ class HitboxButton extends FlxSprite {
     public function new(x:Float, y:Float, width:Int, height:Int, color:FlxColor, camera:FlxCamera) {
         super(x, y);
         makeGraphic(width, height, color);
-        alpha = 0; // hidden by default
+        alpha = 0;
         antialiasing = false;
         hitboxCamera = camera;
     }
 
     private function screenToWorld(screenX:Float, screenY:Float):{x:Float, y:Float} {
         return {
-            x: hitboxCamera.scroll.x + screenX / hitboxCamera.zoom,
-            y: hitboxCamera.scroll.y + screenY / hitboxCamera.zoom
+            x: hitboxCamera.scroll.x + screenX,
+            y: hitboxCamera.scroll.y + screenY
         };
     }
 
