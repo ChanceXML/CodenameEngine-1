@@ -21,11 +21,11 @@ class ModsFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 	public var prefix = 'assets/';
 
 	public function new(basePath:String, libName:String, ?modName:String) {
-		this.basePath = basePath;
-		this.libName = libName;
-		this.prefix = 'assets/$libName/';
-		this.modName = modName == null ? libName : modName;
-		super();
+	this.basePath = basePath;
+	this.libName = libName;
+	this.prefix = 'assets/';
+ 	this.modName = modName == null ? libName : modName;
+	super();
 	}
 
 	function toString():String {
