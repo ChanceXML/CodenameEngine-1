@@ -679,7 +679,7 @@ class PlayState extends MusicBeatState
 
 		hitbox = new HitBox();
         add(hitbox);
-
+		
         hitbox.buttonLeft.onDown.callback = function() { triggerKey(LEFT, true); };
         hitbox.buttonDown.onDown.callback = function() { triggerKey(DOWN, true); };
         hitbox.buttonUp.onDown.callback = function() { triggerKey(UP, true); };
@@ -694,6 +694,8 @@ class PlayState extends MusicBeatState
         hitbox.buttonDown.onOut.callback = hitbox.buttonDown.onUp.callback;
         hitbox.buttonUp.onOut.callback = hitbox.buttonUp.onUp.callback;
         hitbox.buttonRight.onOut.callback = hitbox.buttonRight.onUp.callback;
+
+        hitbox.setupCamera();
 		
 		// SCRIPTING & DATA INITIALIZATION
 		#if REGION
@@ -1112,7 +1114,7 @@ class PlayState extends MusicBeatState
 		var hint = new FlxSprite(0, 0);
         hint.loadGraphic(Paths.image('mobile/hitbox_hint'));
         hint.antialiasing = true;
-        hint.cameras = [camHUD];
+        hint.cameras = [hitboxCamera];
 		hint.visible = Options.hitboxHints;
         add(hint);
 	}
