@@ -1,148 +1,177 @@
 package funkin.backend.assets;
 
-import openfl.utils.AssetLibrary;
-import lime.media.AudioBuffer;
-import lime.graphics.Image;
+import flixel.util.FlxSignal.FlxTypedSignal;
+import funkin.backend.system.MainState;
+import haxe.io.Path;
 import lime.text.Font;
-import lime.utils.Bytes;
+import openfl.text.Font as OpenFLFont;
+import openfl.utils.AssetLibrary;
+import openfl.utils.AssetManifest;
 
+using StringTools;
 #if MOD_SUPPORT
-import sys.FileStat;
 import sys.FileSystem;
 #end
 
-using StringTools;
 
-class ModsFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
-	public var basePath:String;
-	public var modName:String;
-	public var libName:String;
-	public var prefix = 'assets/';
+class ModsFolder {
+	/**
+	 * INTERNAL - Only use when editing source mods!!
+	 */
+	@:dox(hide) public static var onModSwitch:FlxTypedSignal<String->Void> = new FlxTypedSignal<String->Void>();
 
-	public function new(basePath:String, libName:String, ?modName:String) {
-		#if android
-		var root = "/storage/emulated/0/Android/data/com.yoshman29.codenameengine/files/mods/";
-		this.basePath = basePath.startsWith("/") ? basePath : root + (basePath == "" ? "" : basePath);
-		#else
-		this.basePath = basePath;
-		#end
+	/**
+	 * Current mod folder. Will affect `Paths`.
+	 */
+	public static var currentModFolder:String = null;
+	/**
+	 * Path to the `mods` folder.
+	 */
+	public static var modsPath:String = "./mods/";
+	/**
+	 * Path to the `addons` folder.
+	 */
+	public static var addonsPath:String = "./addons/";
 
-		this.libName = libName;
-		this.prefix = 'assets/$libName/';
-		this.modName = modName == null ? libName : modName;
-		super();
-		
-		#if MOD_SUPPORT
-		if (this.basePath != "" && !FileSystem.exists(this.basePath)) {
-			try { FileSystem.createDirectory(this.basePath); } catch(e) {}
+	/**
+	 * If accessing a file as assets/data/global/LIB_mymod.hx should redirect to mymod:assets/data/global.hx
+	 */
+	public static var useLibFile:Bool = true;
+
+	/**
+	 * Whenever its the first time mods has been reloaded.
+	 */
+	private static var __firstTime:Bool = true;
+
+	/**
+	 * Initializes `mods` folder.
+	 */
+	public static function init() {
+		if(!getModsList().contains(Options.lastLoadedMod)) {
+			if(Options.lastLoadedMod != null)
+				Logs.warn("Mod \"" + Options.lastLoadedMod + "\" not found in mods list, switching to base game!");
+			Options.lastLoadedMod = null;
 		}
+	}
+
+	/**
+	 * Switches mod - unloads all the other mods, then load this one.
+	 * @param libName
+	 */
+	public static function switchMod(mod:String) {
+		Options.lastLoadedMod = currentModFolder = mod;
+		reloadMods();
+		if(mod == null) {
+			mod = "(default)";
+		}
+		Logs.traceColored([
+			Logs.logText('Switched to mod: '),
+			Logs.logText(mod, GREEN)
+		], VERBOSE);
+	}
+
+	public static function reloadMods() {
+		if (!__firstTime)
+			FlxG.switchState(new MainState());
+		__firstTime = false;
+	}
+
+	/**
+	 * Loads a mod library from the specified path. Supports folders and zips.
+	 * @param modName Name of the mod
+	 * @param force Whenever the mod should be reloaded if it has already been loaded
+	 */
+	public static function loadModLib(path:String, force:Bool = false, ?modName:String) {
+		#if MOD_SUPPORT
+		if (FileSystem.exists('$path.zip'))
+			return loadLibraryFromZip('$path'.toLowerCase(), '$path.zip', force, modName);
+		else
+			return loadLibraryFromFolder('$path'.toLowerCase(), '$path', force, modName);
+
+		#else
+		return null;
 		#end
 	}
 
-	function toString():String return '(ModsFolderLibrary: $modName)';
+	public static function getModsList():Array<String> {
+		var mods:Array<String> = [];
+		#if MOD_SUPPORT
+		if (!FileSystem.exists(modsPath)) {
+			// Mods directory does not exist yet, create it
+			FileSystem.createDirectory(modsPath);
+		}
+		
+		final modsList:Array<String> = FileSystem.readDirectory(modsPath);
+
+		if (modsList == null || modsList.length <= 0)
+			return mods;
+
+		for (modFolder in modsList) {
+			if (FileSystem.isDirectory(modsPath + modFolder)) {
+				mods.push(modFolder);
+			} else {
+				var ext = Path.extension(modFolder).toLowerCase();
+				switch(ext) {
+					case 'zip':
+						// is a zip mod!!
+						mods.push(Path.withoutExtension(modFolder));
+				}
+			}
+		}
+		#end
+		return mods;
+	}
+	public static function getLoadedModsLibs(skipTranslated:Bool = false):Array<IModsAssetLibrary> {
+		var libs = [];
+		for (i in Paths.assetsTree.libraries) {
+			var l = AssetsLibraryList.getCleanLibrary(i);
+			#if TRANSLATIONS_SUPPORT
+			if(skipTranslated && (l is TranslatedAssetLibrary)) continue;
+			#end
+			if (l is ScriptedAssetLibrary || l is IModsAssetLibrary) libs.push(cast(l, IModsAssetLibrary));
+		}
+		return libs;
+	}
+	public static function getLoadedMods(skipTranslated:Bool = false):Array<String>
+		return [for (modLib in getLoadedModsLibs(skipTranslated)) modLib.modName];
+
+	public static function prepareLibrary(libName:String, force:Bool = false) {
+		var assets:AssetManifest = new AssetManifest();
+		assets.name = libName;
+		assets.version = 2;
+		assets.libraryArgs = [];
+		assets.assets = [];
+
+		return AssetLibrary.fromManifest(assets);
+	}
+
+	public static function registerFont(font:Font) {
+		var openflFont = new OpenFLFont();
+		@:privateAccess
+		openflFont.__fromLimeFont(font);
+		OpenFLFont.registerFont(openflFont);
+		return font;
+	}
+
+	public static function prepareModLibrary(libName:String, lib:IModsAssetLibrary, force:Bool = false, ?tag:AssetSource) {
+		var openLib = prepareLibrary(libName, force);
+		lib.prefix = 'assets/';
+		@:privateAccess
+		openLib.__proxy = cast(lib, lime.utils.AssetLibrary);
+		if (tag != null) {
+			openLib.tag = tag;
+			cast(lib, lime.utils.AssetLibrary).tag = tag;
+		}
+		return openLib;
+	}
 
 	#if MOD_SUPPORT
-	private var editedTimes:Map<String, Float> = [];
-	public var _parsedAsset:String = null;
-
-	public function getEditedTime(asset:String):Null<Float> return editedTimes[asset];
-
-	public override function getAudioBuffer(id:String):AudioBuffer {
-		if (!exists(id, "SOUND")) return null;
-		var path = getAssetPath();
-		editedTimes[id] = FileSystem.stat(path).mtime.getTime();
-		return AudioBuffer.fromFile(path);
+	public static function loadLibraryFromFolder(libName:String, folder:String, force:Bool = false, ?modName:String, ?tag:AssetSource = MODS) {
+		return prepareModLibrary(libName, new ModsFolderLibrary(folder, libName, modName), force, tag);
 	}
 
-	public override function getBytes(id:String):Bytes {
-		if (!exists(id, "BINARY")) return null;
-		var path = getAssetPath();
-		editedTimes[id] = FileSystem.stat(path).mtime.getTime();
-		return Bytes.fromFile(path);
-	}
-
-	public override function getFont(id:String):Font {
-		if (!exists(id, "FONT")) return null;
-		var path = getAssetPath();
-		editedTimes[id] = FileSystem.stat(path).mtime.getTime();
-		return ModsFolder.registerFont(Font.fromFile(path));
-	}
-
-	public override function getImage(id:String):Image {
-		if (!exists(id, "IMAGE")) return null;
-		var path = getAssetPath();
-		editedTimes[id] = FileSystem.stat(path).mtime.getTime();
-		return Image.fromFile(path);
-	}
-
-	public override function getPath(id:String):String {
-		if (!__parseAsset(id)) return null;
-		return getAssetPath();
-	}
-
-	public inline function getFolders(folder:String):Array<String> return __getFiles(folder, true);
-	public inline function getFiles(folder:String):Array<String> return __getFiles(folder, false);
-
-	public function __getFiles(folder:String, folders:Bool = false) {
-		if (!folder.endsWith("/")) folder += "/";
-		if (!__parseAsset(folder)) return [];
-		var path = getAssetPath();
-		try {
-			if (!FileSystem.exists(path) || !FileSystem.isDirectory(path)) return [];
-			var result:Array<String> = [];
-			for(e in FileSystem.readDirectory(path)) {
-				if (FileSystem.isDirectory(path + e) == folders) result.push(e);
-			}
-			return result;
-		} catch(e) {}
-		return [];
-	}
-
-	public override function exists(asset:String, type:String):Bool {
-		if(!__parseAsset(asset)) return false;
-		var path = getAssetPath();
-		return FileSystem.exists(path) && !FileSystem.isDirectory(path);
-	}
-
-	private function getAssetPath():String {
-		var formattedBase = basePath.endsWith("/") ? basePath : basePath + "/";
-		return formattedBase + _parsedAsset;
-	}
-
-	private function __isCacheValid(cache:Map<String, Dynamic>, asset:String, isLocalCache:Bool = false) {
-		if (!editedTimes.exists(asset)) return false;
-		var path = getPath(asset);
-		if (path == null || !FileSystem.exists(path)) return false;
-		var editedTime = editedTimes[asset];
-		if (editedTime == null || editedTime < FileSystem.stat(path).mtime.getTime()) return false;
-		if (!isLocalCache) asset = '$libName:$asset';
-		return cache.exists(asset) && cache[asset] != null;
-	}
-
-	private function __parseAsset(asset:String):Bool {
-		if (!asset.startsWith(prefix)) return false;
-		_parsedAsset = asset.substr(prefix.length);
-		return true;
-	}
-
-	public override function list(type:String):Array<String> {
-		var result = [];
-		if (basePath != null && basePath != "" && FileSystem.exists(basePath)) __listAppend(result, '');
-		return result;
-	}
-
-	function __listAppend(arr:Array<String>, folder:String) {
-		var fullFolderPath = basePath.endsWith("/") ? basePath + folder : basePath + "/" + folder;
-		if (!FileSystem.exists(fullFolderPath) || !FileSystem.isDirectory(fullFolderPath)) return;
-		for(file in FileSystem.readDirectory(fullFolderPath)) {
-			var fullPath = fullFolderPath + file;
-			if (FileSystem.isDirectory(fullPath)) __listAppend(arr, folder + file + "/");
-			else arr.push(prefix + folder + file);
-		}
+	public static function loadLibraryFromZip(libName:String, zipPath:String, force:Bool = false, ?modName:String, ?tag:AssetSource = MODS) {
+		return prepareModLibrary(libName, new ZipFolderLibrary(zipPath, libName, modName), force, tag);
 	}
 	#end
-
-	@:noCompletion public var folderPath(get, set):String;
-	@:noCompletion private inline function get_folderPath():String return basePath;
-	@:noCompletion private inline function set_folderPath(value:String):String return basePath = value;
-}
+				}
