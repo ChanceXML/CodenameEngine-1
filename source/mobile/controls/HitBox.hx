@@ -22,18 +22,17 @@ class HitBox extends FlxSpriteGroup {
         var w:Int = Std.int(FlxG.width / 4);
         var h:Int = FlxG.height;
 
-        add(buttonLeft  = new HitboxButton(0, 0, w, h, 0xFFC24B99));
-        add(buttonDown  = new HitboxButton(w, 0, w, h, 0xFF00FFFF));
-        add(buttonUp    = new HitboxButton(w * 2, 0, w, h, 0xFF12FA05));
-        add(buttonRight = new HitboxButton(w * 3, 0, w, h, 0xFFF9393F));
-
         hitboxCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
         hitboxCamera.scroll.set(0, 0);
         hitboxCamera.bgColor = 0x00000000;
 
-        for(button in [buttonLeft, buttonDown, buttonUp, buttonRight]) {
+        add(buttonLeft  = new HitboxButton(0, 0, w, h, 0xFFC24B99, hitboxCamera));
+        add(buttonDown  = new HitboxButton(w, 0, w, h, 0xFF00FFFF, hitboxCamera));
+        add(buttonUp    = new HitboxButton(w * 2, 0, w, h, 0xFF12FA05, hitboxCamera));
+        add(buttonRight = new HitboxButton(w * 3, 0, w, h, 0xFFF9393F, hitboxCamera));
+
+        for(button in [buttonLeft, buttonDown, buttonUp, buttonRight])
             button.cameras = [hitboxCamera];
-        }
 
         scrollFactor.set();
         FlxCamera.defaultCameras = [FlxG.camera];
@@ -57,8 +56,11 @@ class HitboxButton extends FlxSprite {
     public var isPressed:Bool = false;
     private var _wasPressed:Bool = false;
 
-    public function new(x:Float, y:Float, width:Int, height:Int, color:FlxColor) {
+    public var hitboxCam:FlxCamera;
+
+    public function new(x:Float, y:Float, width:Int, height:Int, color:FlxColor, cam:FlxCamera) {
         super(x, y);
+        hitboxCam = cam;
         makeGraphic(width, height, color);
         alpha = 0;
         antialiasing = false;
@@ -70,8 +72,8 @@ class HitboxButton extends FlxSprite {
 
         #if FLX_TOUCH
         for (touch in FlxG.touches.list) {
-            var worldX = hitboxCamera.scroll.x + touch.screenX / hitboxCamera.zoom;
-            var worldY = hitboxCamera.scroll.y + touch.screenY / hitboxCamera.zoom;
+            var worldX = hitboxCam.scroll.x + touch.screenX / hitboxCam.zoom;
+            var worldY = hitboxCam.scroll.y + touch.screenY / hitboxCam.zoom;
             if (worldX >= x && worldX <= x + width && worldY >= y && worldY <= y + height) {
                 isPressed = true;
                 break;
@@ -80,8 +82,8 @@ class HitboxButton extends FlxSprite {
         #end
 
         #if FLX_MOUSE
-        var worldX = hitboxCamera.scroll.x + FlxG.mouse.screenX / hitboxCamera.zoom;
-        var worldY = hitboxCamera.scroll.y + FlxG.mouse.screenY / hitboxCamera.zoom;
+        var worldX = hitboxCam.scroll.x + FlxG.mouse.screenX / hitboxCam.zoom;
+        var worldY = hitboxCam.scroll.y + FlxG.mouse.screenY / hitboxCam.zoom;
         if (worldX >= x && worldX <= x + width && worldY >= y && worldY <= y + height && FlxG.mouse.pressed)
             isPressed = true;
         #end
