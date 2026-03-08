@@ -19,10 +19,6 @@ class HitBox extends FlxSpriteGroup {
     public function new() {
         super();
 
-        hitboxCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
-        hitboxCamera.scroll.set(0, 0);
-        FlxG.cameras.add(hitboxCamera);
-
         var w:Int = Std.int(FlxG.width / 4);
         var h:Int = FlxG.height;
 
@@ -31,8 +27,15 @@ class HitBox extends FlxSpriteGroup {
         add(buttonUp    = new HitboxButton(w * 2, 0, w, h, 0xFF12FA05));
         add(buttonRight = new HitboxButton(w * 3, 0, w, h, 0xFFF9393F));
 
+        hitboxCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
+        hitboxCamera.scroll.set(0, 0);
+
+        for(button in [buttonLeft, buttonDown, buttonUp, buttonRight])
+            button.cameras = [hitboxCamera];
+
+        FlxG.cameras.add(hitboxCamera);
+
         cameras = [hitboxCamera];
-        
         scrollFactor.set();
     }
 
