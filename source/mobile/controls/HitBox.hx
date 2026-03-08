@@ -7,6 +7,10 @@ import flixel.util.FlxColor;
 import flixel.FlxCamera;
 import funkin.options.Options;
 
+typedef HitboxCallback = {
+    var callback:Void->Void;
+}
+
 class HitBox extends FlxSpriteGroup {
 
     public var hitboxCamera:FlxCamera;
@@ -22,14 +26,14 @@ class HitBox extends FlxSpriteGroup {
         var w:Int = Std.int(FlxG.width / 4);
         var h:Int = FlxG.height;
 
+        add(buttonLeft  = new HitboxButton(0, 0, w, h, 0xFFC24B99, this));
+        add(buttonDown  = new HitboxButton(w, 0, w, h, 0xFF00FFFF, this));
+        add(buttonUp    = new HitboxButton(w * 2, 0, w, h, 0xFF12FA05, this));
+        add(buttonRight = new HitboxButton(w * 3, 0, w, h, 0xFFF9393F, this));
+
         hitboxCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
         hitboxCamera.scroll.set(0, 0);
         hitboxCamera.bgColor = 0x00000000;
-
-        add(buttonLeft  = new HitboxButton(0, 0, w, h, 0xFFC24B99, hitboxCamera));
-        add(buttonDown  = new HitboxButton(w, 0, w, h, 0xFF00FFFF, hitboxCamera));
-        add(buttonUp    = new HitboxButton(w * 2, 0, w, h, 0xFF12FA05, hitboxCamera));
-        add(buttonRight = new HitboxButton(w * 3, 0, w, h, 0xFFF9393F, hitboxCamera));
 
         for(button in [buttonLeft, buttonDown, buttonUp, buttonRight])
             button.cameras = [hitboxCamera];
@@ -56,50 +60,48 @@ class HitboxButton extends FlxSprite {
     public var isPressed:Bool = false;
     private var _wasPressed:Bool = false;
 
-    public var hitboxCam:FlxCamera;
+    public var parentHitbox:HitBox;
 
-    public function new(x:Float, y:Float, width:Int, height:Int, color:FlxColor, cam:FlxCamera) {
+    public function new(x:Float, y:Float, width:Int, height:Int, color:FlxColor, parentHitbox:HitBox) {
         super(x, y);
-        hitboxCam = cam;
         makeGraphic(width, height, color);
-        alpha = 0;
+        alpha = 0.00001;
         antialiasing = false;
+        this.parentHitbox = parentHitbox;
     }
 
     override public function update(elapsed:Float) {
-    _wasPressed = isPressed;
-    isPressed = false;
+        _wasPressed = isPressed;
+        isPressed = false;
 
-    var oldCams = FlxCamera.defaultCameras;
-    FlxCamera.defaultCameras = [hitboxCam];
+        var oldCams = FlxCamera.defaultCameras;
+        FlxCamera.defaultCameras = [parentHitbox.hitboxCamera];
 
-    #if FLX_TOUCH
-    for (touch in FlxG.touches.list) {
-        if (touch.overlaps(this)) {
-            isPressed = true;
-            break;
+        #if FLX_TOUCH
+        for (touch in FlxG.touches.list) {
+            if (touch.overlaps(this)) {
+                isPressed = true;
+                break;
+            }
         }
+        #end
+
+        #if FLX_MOUSE
+        if (FlxG.mouse.overlaps(this) && FlxG.mouse.pressed)
+            isPressed = true;
+        #end
+
+        FlxCamera.defaultCameras = oldCams;
+
+        if (isPressed && !_wasPressed && onDown.callback != null)
+            onDown.callback();
+        if (!isPressed && _wasPressed && onUp.callback != null)
+            onUp.callback();
+        if (!isPressed && _wasPressed && onOut.callback != null)
+            onOut.callback();
+
+        alpha = Options.hitboxOpacity;
+
+        super.update(elapsed);
     }
-    #end
-
-    #if FLX_MOUSE
-    if (FlxG.mouse.overlaps(this) && FlxG.mouse.pressed)
-        isPressed = true;
-    #end
-
-    FlxCamera.defaultCameras = oldCams;
-
-    if (isPressed && !_wasPressed && onDown.callback != null)
-        onDown.callback();
-    if (!isPressed && _wasPressed && onUp.callback != null)
-        onUp.callback();
-    if (!isPressed && _wasPressed && onOut.callback != null)
-        onOut.callback();
-
-    alpha = if (isPressed) Options.hitboxOpacity else 0;
-    super.update(elapsed);
-    }
-
-typedef HitboxCallback = {
-    var callback:Void->Void;
 }
