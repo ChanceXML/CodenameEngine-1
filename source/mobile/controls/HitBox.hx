@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxColor;
+import flixel.FlxCamera;
 import funkin.options.Options;
 
 class HitBox extends FlxSpriteGroup {
@@ -29,6 +30,8 @@ class HitBox extends FlxSpriteGroup {
         add(buttonDown  = new HitboxButton(w, 0, w, h, 0xFF00FFFF));
         add(buttonUp    = new HitboxButton(w * 2, 0, w, h, 0xFF12FA05));
         add(buttonRight = new HitboxButton(w * 3, 0, w, h, 0xFFF9393F));
+
+        cameras = [hitboxCamera];
         
         scrollFactor.set();
     }
