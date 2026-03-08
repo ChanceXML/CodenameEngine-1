@@ -1114,7 +1114,7 @@ class PlayState extends MusicBeatState
 		var hint = new FlxSprite(0, 0);
         hint.loadGraphic(Paths.image('mobile/hitbox_hint'));
         hint.antialiasing = true;
-        hint.cameras = [hitboxCamera];
+        hint.cameras = [hitbox.hitboxCamera];
 		hint.visible = Options.hitboxHints;
         add(hint);
 	}
