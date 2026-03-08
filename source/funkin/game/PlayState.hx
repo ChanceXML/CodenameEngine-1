@@ -695,8 +695,6 @@ class PlayState extends MusicBeatState
         hitbox.buttonDown.onOut.callback = hitbox.buttonDown.onUp.callback;
         hitbox.buttonUp.onOut.callback = hitbox.buttonUp.onUp.callback;
         hitbox.buttonRight.onOut.callback = hitbox.buttonRight.onUp.callback;
-
-        hitbox.setupCamera();
 		
 		// SCRIPTING & DATA INITIALIZATION
 		#if REGION
