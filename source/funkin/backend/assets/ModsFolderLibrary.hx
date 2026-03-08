@@ -21,12 +21,8 @@ class ModsFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 
 	public function new(basePath:String, libName:String, ?modName:String) {
 		#if android
-		var androidRoot = "/storage/emulated/0/Android/data/com.yoshman29.codenameengine/files/mods/";
-		if (!basePath.startsWith("/")) {
-			this.basePath = androidRoot + basePath;
-		} else {
-			this.basePath = basePath;
-		}
+		var root = "/storage/emulated/0/Android/data/com.yoshman29.codenameengine/files/mods/";
+		this.basePath = basePath.startsWith("/") ? basePath : root + (basePath == "" ? "" : basePath);
 		#else
 		this.basePath = basePath;
 		#end
@@ -37,23 +33,19 @@ class ModsFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 		super();
 		
 		#if MOD_SUPPORT
-		if (!FileSystem.exists(this.basePath)) {
+		if (this.basePath != "" && !FileSystem.exists(this.basePath)) {
 			try { FileSystem.createDirectory(this.basePath); } catch(e) {}
 		}
 		#end
 	}
 
-	function toString():String {
-		return '(ModsFolderLibrary: $modName | Path: $basePath)';
-	}
+	function toString():String return '(ModsFolderLibrary: $modName)';
 
 	#if MOD_SUPPORT
 	private var editedTimes:Map<String, Float> = [];
 	public var _parsedAsset:String = null;
 
-	public function getEditedTime(asset:String):Null<Float> {
-		return editedTimes[asset];
-	}
+	public function getEditedTime(asset:String):Null<Float> return editedTimes[asset];
 
 	public override function getAudioBuffer(id:String):AudioBuffer {
 		if (!exists(id, "SOUND")) return null;
@@ -88,22 +80,19 @@ class ModsFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 		return getAssetPath();
 	}
 
-	public inline function getFolders(folder:String):Array<String>
-		return __getFiles(folder, true);
-
-	public inline function getFiles(folder:String):Array<String>
-		return __getFiles(folder, false);
+	public inline function getFolders(folder:String):Array<String> return __getFiles(folder, true);
+	public inline function getFiles(folder:String):Array<String> return __getFiles(folder, false);
 
 	public function __getFiles(folder:String, folders:Bool = false) {
 		if (!folder.endsWith("/")) folder += "/";
 		if (!__parseAsset(folder)) return [];
 		var path = getAssetPath();
 		try {
-			if (!FileSystem.exists(path)) return [];
+			if (!FileSystem.exists(path) || !FileSystem.isDirectory(path)) return [];
 			var result:Array<String> = [];
-			for(e in FileSystem.readDirectory(path))
-				if (FileSystem.isDirectory('$path$e') == folders)
-					result.push(e);
+			for(e in FileSystem.readDirectory(path)) {
+				if (FileSystem.isDirectory(path + e) == folders) result.push(e);
+			}
 			return result;
 		} catch(e) {}
 		return [];
@@ -115,21 +104,17 @@ class ModsFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 		return FileSystem.exists(path) && !FileSystem.isDirectory(path);
 	}
 
-	private function getAssetPath() {
-		var path = basePath.endsWith("/") ? basePath : basePath + "/";
-		return '$path$_parsedAsset';
+	private function getAssetPath():String {
+		var formattedBase = basePath.endsWith("/") ? basePath : basePath + "/";
+		return formattedBase + _parsedAsset;
 	}
 
 	private function __isCacheValid(cache:Map<String, Dynamic>, asset:String, isLocalCache:Bool = false) {
 		if (!editedTimes.exists(asset)) return false;
 		var path = getPath(asset);
 		if (path == null || !FileSystem.exists(path)) return false;
-
 		var editedTime = editedTimes[asset];
-		if (editedTime == null || editedTime < FileSystem.stat(path).mtime.getTime()) {
-			return false;
-		}
-
+		if (editedTime == null || editedTime < FileSystem.stat(path).mtime.getTime()) return false;
 		if (!isLocalCache) asset = '$libName:$asset';
 		return cache.exists(asset) && cache[asset] != null;
 	}
@@ -137,35 +122,22 @@ class ModsFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 	private function __parseAsset(asset:String):Bool {
 		if (!asset.startsWith(prefix)) return false;
 		_parsedAsset = asset.substr(prefix.length);
-		
-		if(ModsFolder.useLibFile) {
-			var file = new haxe.io.Path(_parsedAsset);
-			if(file.file.startsWith("LIB_")) {
-				var library = file.file.substr(4);
-				if(library != modName) return false;
-				_parsedAsset = (file.dir != null ? file.dir + "/" : "") + file.file + "." + file.ext;
-			}
-		}
 		return true;
 	}
 
 	public override function list(type:String):Array<String> {
 		var result = [];
-		if (FileSystem.exists(basePath))
-			__listAppend(result, '');
+		if (basePath != null && basePath != "" && FileSystem.exists(basePath)) __listAppend(result, '');
 		return result;
 	}
 
 	function __listAppend(arr:Array<String>, folder:String) {
 		var fullFolderPath = basePath.endsWith("/") ? basePath + folder : basePath + "/" + folder;
-		if (!FileSystem.exists(fullFolderPath)) return;
-		
+		if (!FileSystem.exists(fullFolderPath) || !FileSystem.isDirectory(fullFolderPath)) return;
 		for(file in FileSystem.readDirectory(fullFolderPath)) {
-			var fullPath = '$fullFolderPath$file';
-			if (FileSystem.isDirectory(fullPath))
-				__listAppend(arr, '$folder$file/');
-			else
-				arr.push('$prefix$folder$file');
+			var fullPath = fullFolderPath + file;
+			if (FileSystem.isDirectory(fullPath)) __listAppend(arr, folder + file + "/");
+			else arr.push(prefix + folder + file);
 		}
 	}
 	#end
