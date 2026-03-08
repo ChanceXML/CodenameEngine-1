@@ -166,14 +166,14 @@ class ModsFolder {
 	}
 
 	private static function getDefaultModsPath():String {
-        #if android
-        var packageName = "com.yoshman29.codenameengine";
-        return "/sdcard/Android/data/" + packageName + "/files/mods/";
-        #else
-        return "./mods/";
-        #end
-      }
-
+    #if android
+    var packageName = "com.yoshman29.codenameengine";
+    return "/storage/emulated/0/Android/data/" + packageName + "/files/mods/";
+    #else
+    return "./mods/";
+    #end
+	}
+						
 	#if MOD_SUPPORT
 	public static function loadLibraryFromFolder(libName:String, folder:String, force:Bool = false, ?modName:String, ?tag:AssetSource = MODS) {
 		return prepareModLibrary(libName, new ModsFolderLibrary(folder, libName, modName), force, tag);
