@@ -101,7 +101,7 @@ class ScriptedAssetLibrary extends ModsFolderLibrary {
 		return super.exists(asset, type);
 	}
 
-	private override function getAssetPath() {
+	public override function getAssetPath() {
 		var result:Dynamic = script.call("getAssetPath", []);
 		if(result != null) {
 			return result == nullValue ? null : result;
