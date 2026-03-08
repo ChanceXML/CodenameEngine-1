@@ -106,7 +106,6 @@ class ModsFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 		return cache.exists(asset) && cache[asset] != null;
 	}
 
-	// FIX: Re-added file.file to prevent missing filenames like ".png"
 	private function __parseAsset(asset:String):Bool {
 		if (asset == null || !asset.startsWith(prefix)) return false;
 		
@@ -118,7 +117,6 @@ class ModsFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 				var library = file.file.substr(4);
 				if(library != modName) return false;
 				
-				// Reconstruct path including the directory and the actual filename
 				var dir = (file.dir != null && file.dir != "") ? file.dir + "/" : "";
 				_parsedAsset = dir + file.file + (file.ext != null ? "." + file.ext : "");
 			}
