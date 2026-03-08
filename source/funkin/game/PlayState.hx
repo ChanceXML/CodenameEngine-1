@@ -680,9 +680,6 @@ class PlayState extends MusicBeatState
 		hitbox = new HitBox();
         add(hitbox);
 
-		FlxG.cameras.remove(hitbox.hitboxCamera);
-        FlxG.cameras.add(hitbox.hitboxCamera);
-
         hitbox.buttonLeft.onDown.callback = function() { triggerKey(LEFT, true); };
         hitbox.buttonDown.onDown.callback = function() { triggerKey(DOWN, true); };
         hitbox.buttonUp.onDown.callback = function() { triggerKey(UP, true); };
