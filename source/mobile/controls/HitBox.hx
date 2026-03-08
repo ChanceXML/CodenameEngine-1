@@ -22,14 +22,14 @@ class HitBox extends FlxSpriteGroup {
         var w:Int = Std.int(FlxG.width / 4);
         var h:Int = FlxG.height;
 
-        add(buttonLeft  = new HitboxButton(0, 0, w, h, 0xFFC24B99));
-        add(buttonDown  = new HitboxButton(w, 0, w, h, 0xFF00FFFF));
-        add(buttonUp    = new HitboxButton(w * 2, 0, w, h, 0xFF12FA05));
-        add(buttonRight = new HitboxButton(w * 3, 0, w, h, 0xFFF9393F));
-
         hitboxCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
         hitboxCamera.scroll.set(0, 0);
         hitboxCamera.bgColor = 0x00000000;
+
+        add(buttonLeft  = new HitboxButton(0, 0, w, h, 0xFFC24B99, hitboxCamera));
+        add(buttonDown  = new HitboxButton(w, 0, w, h, 0xFF00FFFF, hitboxCamera));
+        add(buttonUp    = new HitboxButton(w * 2, 0, w, h, 0xFF12FA05, hitboxCamera));
+        add(buttonRight = new HitboxButton(w * 3, 0, w, h, 0xFFF9393F, hitboxCamera));
 
         for(button in [buttonLeft, buttonDown, buttonUp, buttonRight])
             button.cameras = [hitboxCamera];
@@ -57,11 +57,14 @@ class HitboxButton extends FlxSprite {
     public var isPressed:Bool = false;
     private var _wasPressed:Bool = false;
 
-    public function new(x:Float, y:Float, width:Int, height:Int, color:FlxColor) {
+    public var hitboxCamera:FlxCamera;
+
+    public function new(x:Float, y:Float, width:Int, height:Int, color:FlxColor, hitboxCamera:FlxCamera) {
         super(x, y);
         makeGraphic(width, height, color);
         alpha = 0.00001;
         antialiasing = false;
+        this.hitboxCamera = hitboxCamera;
     }
 
     override public function update(elapsed:Float) {
@@ -70,7 +73,9 @@ class HitboxButton extends FlxSprite {
 
         #if FLX_TOUCH
         for (touch in FlxG.touches.list) {
-            if (touch.overlaps(this)) {
+            var localX = hitboxCamera.getWorldPosition().x + touch.screenX / hitboxCamera.zoom;
+            var localY = hitboxCamera.getWorldPosition().y + touch.screenY / hitboxCamera.zoom;
+            if (localX >= x && localX <= x + width && localY >= y && localY <= y + height) {
                 isPressed = true;
                 break;
             }
@@ -78,7 +83,9 @@ class HitboxButton extends FlxSprite {
         #end
 
         #if FLX_MOUSE
-        if (FlxG.mouse.overlaps(this) && FlxG.mouse.pressed)
+        var localX = hitboxCamera.getWorldPosition().x + FlxG.mouse.screenX / hitboxCamera.zoom;
+        var localY = hitboxCamera.getWorldPosition().y + FlxG.mouse.screenY / hitboxCamera.zoom;
+        if (localX >= x && localX <= x + width && localY >= y && localY <= y + height && FlxG.mouse.pressed)
             isPressed = true;
         #end
 
