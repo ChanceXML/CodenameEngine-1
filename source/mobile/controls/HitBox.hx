@@ -67,38 +67,38 @@ class HitboxButton extends FlxSprite {
     }
 
     override public function update(elapsed:Float) {
-        _wasPressed = isPressed;
-        isPressed = false;
+    _wasPressed = isPressed;
+    isPressed = false;
 
-        #if FLX_TOUCH
-        for (touch in FlxG.touches.list) {
-            var worldX = hitboxCam.scroll.x + touch.screenX / hitboxCam.zoom;
-            var worldY = hitboxCam.scroll.y + touch.screenY / hitboxCam.zoom;
-            if (worldX >= x && worldX <= x + width && worldY >= y && worldY <= y + height) {
-                isPressed = true;
-                break;
-            }
-        }
-        #end
+    var oldCams = FlxCamera.defaultCameras;
+    FlxCamera.defaultCameras = [hitboxCam];
 
-        #if FLX_MOUSE
-        var worldX = hitboxCam.scroll.x + FlxG.mouse.screenX / hitboxCam.zoom;
-        var worldY = hitboxCam.scroll.y + FlxG.mouse.screenY / hitboxCam.zoom;
-        if (worldX >= x && worldX <= x + width && worldY >= y && worldY <= y + height && FlxG.mouse.pressed)
+    #if FLX_TOUCH
+    for (touch in FlxG.touches.list) {
+        if (touch.overlaps(this)) {
             isPressed = true;
-        #end
-
-        if (isPressed && !_wasPressed && onDown.callback != null)
-            onDown.callback();
-        if (!isPressed && _wasPressed && onUp.callback != null)
-            onUp.callback();
-        if (!isPressed && _wasPressed && onOut.callback != null)
-            onOut.callback();
-
-        alpha = if (isPressed) Options.hitboxOpacity else 0;
-        super.update(elapsed);
+            break;
+        }
     }
-}
+    #end
+
+    #if FLX_MOUSE
+    if (FlxG.mouse.overlaps(this) && FlxG.mouse.pressed)
+        isPressed = true;
+    #end
+
+    FlxCamera.defaultCameras = oldCams;
+
+    if (isPressed && !_wasPressed && onDown.callback != null)
+        onDown.callback();
+    if (!isPressed && _wasPressed && onUp.callback != null)
+        onUp.callback();
+    if (!isPressed && _wasPressed && onOut.callback != null)
+        onOut.callback();
+
+    alpha = if (isPressed) Options.hitboxOpacity else 0;
+    super.update(elapsed);
+    }
 
 typedef HitboxCallback = {
     var callback:Void->Void;
