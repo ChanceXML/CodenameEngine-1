@@ -109,11 +109,6 @@ class ModsFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 		return FileSystem.exists(getAssetPath());
 	}
 
-	private function getAssetPath() {
-     	var p = '$basePath/$_parsedAsset';
-    	trace("MOD ASSET PATH: " + p);
-	    return p;
-	}
 
 	private function __isCacheValid(cache:Map<String, Dynamic>, asset:String, isLocalCache:Bool = false) {
 		if (!editedTimes.exists(asset))
@@ -178,4 +173,10 @@ class ModsFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 	@:noCompletion private inline function set_folderPath(value:String):String {
 		return basePath = value;
 	}
+}
+
+private function getAssetPath() {
+     	var p = '$basePath/$_parsedAsset';
+    	trace("MOD ASSET PATH: " + p);
+	    return p;
 }
