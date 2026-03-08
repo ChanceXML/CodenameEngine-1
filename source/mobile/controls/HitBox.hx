@@ -63,13 +63,10 @@ class HitboxButton extends FlxSprite {
         if (FlxG.mouse.overlaps(this) && FlxG.mouse.pressed) isPressed = true;
         #end
 
-         if (isPressed && !_wasPressed) {
-            alpha = Options.hitboxOpacity; 
-            if (onDown.callback != null) onDown.callback();
-        } else if (!isPressed && _wasPressed) {
-            alpha = 0.00001;
-            if (onUp.callback != null) onUp.callback();
-        }
+        if (isPressed)
+        alpha = Options.hitboxOpacity;
+        else
+        alpha = 0.00001;
 
         super.update(elapsed);
     }
