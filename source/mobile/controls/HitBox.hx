@@ -51,15 +51,13 @@ class HitboxButton extends FlxSprite {
     isPressed = false;
 
     #if FLX_TOUCH
-    for (touch in FlxG.touches.list)
-  {
-    if (touch.overlaps(this))
-  {
-    isPressed = true;
-    break;
-  }
-   }
-    #end
+    for (touch in FlxG.touches.list) {
+    if (touch.overlaps(this)) {
+      isPressed = true;
+      break;
+    }
+}
+#end
         
     #if FLX_MOUSE
     if (FlxG.mouse.overlaps(this) && FlxG.mouse.pressed)
