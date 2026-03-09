@@ -97,3 +97,4 @@ class MobileControls extends FlxGroup
 	else
 		FlxG.keys._keyListMap[key] = false;
 }
+}
