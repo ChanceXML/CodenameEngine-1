@@ -91,10 +91,9 @@ class MobileControls extends FlxGroup
 	}
 
 	function triggerKey(key:FlxKey, pressed:Bool)
-	{
-		if (pressed)
-			FlxG.keys.press(key);
-		else
-			FlxG.keys.release(key);
-	}
-		}
+{
+	if (pressed)
+		FlxG.keys._keyListMap[key] = true;
+	else
+		FlxG.keys._keyListMap[key] = false;
+}
