@@ -6,6 +6,7 @@ import flixel.ui.FlxButton;
 import flixel.input.keyboard.FlxKey;
 import openfl.events.KeyboardEvent;
 import openfl.Lib;
+import haxe.Timer;
 
 class MobileControls extends FlxGroup
 {
@@ -43,19 +44,24 @@ class MobileControls extends FlxGroup
 			btn.alpha = 0.9;
 			
 			triggerKey(key, true);
-			triggerKey(key, false);
+
+			Timer.delay(function() {
+				triggerKey(key, false);
+			}, 50);
 		};
 
 		btn.onUp.callback = function()
 		{
-			isPressed = false;
 			btn.alpha = 0.5;
+			Timer.delay(function() {
+				isPressed = false;
+			}, 100);
 		};
         
 		btn.onOut.callback = function()
 		{
-			isPressed = false;
 			btn.alpha = 0.5;
+			isPressed = false;
 		};
 
 		add(btn);
@@ -74,7 +80,7 @@ class MobileControls extends FlxGroup
 				createButton(177.5, 582.5, "RIGHT", FlxKey.RIGHT);
 
 			case FULL:
-				createButton(137.5, 377.5, "UP", FlxKey.UP);
+				createButton(137.5, 387.5, "UP", FlxKey.UP);
 				createButton(22.5, 482.5, "LEFT", FlxKey.LEFT);
 				createButton(257.5, 482.5, "RIGHT", FlxKey.RIGHT);
 				createButton(137.5, 592.5, "DOWN", FlxKey.DOWN);
