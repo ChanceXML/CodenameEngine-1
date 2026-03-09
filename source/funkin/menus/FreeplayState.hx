@@ -143,8 +143,6 @@ class FreeplayState extends MusicBeatState
 
 		DiscordUtil.call("onMenuLoaded", ["Freeplay"]);
 
-		addMobile(FULL, A_B_X_Y);
-
 		super.create();
 
 		// LOAD CHARACTERS
@@ -157,6 +155,8 @@ class FreeplayState extends MusicBeatState
 
 		grpSongs = new FlxTypedGroup<Alphabet>();
 		add(grpSongs);
+
+		addMobile(FULL, A_B_X_Y);
 
 		for (i in 0...songs.length)
 		{
