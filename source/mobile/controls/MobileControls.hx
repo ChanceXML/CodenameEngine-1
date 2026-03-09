@@ -3,10 +3,10 @@ package mobile.controls;
 import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.ui.FlxButton;
+import flixel.FlxCamera;
 import flixel.input.keyboard.FlxKey;
 import openfl.events.KeyboardEvent;
 import openfl.Lib;
-import flixel.FlxCamera;
 
 class MobileControls extends FlxGroup
 {
