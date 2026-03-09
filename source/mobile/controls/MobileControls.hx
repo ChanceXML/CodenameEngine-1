@@ -5,6 +5,7 @@ import flixel.FlxCamera;
 import flixel.group.FlxGroup;
 import flixel.ui.FlxButton;
 import flixel.input.keyboard.FlxKey;
+import openfl.events.KeyboardEvent;
 import openfl.Lib;
 
 class MobileControls extends FlxGroup
@@ -100,11 +101,8 @@ class MobileControls extends FlxGroup
 		}
 	}
 
-	function triggerKey(key:FlxKey, pressed:Bool)
-	{
-		if(pressed)
-			FlxG.keys.justPressed.set(key, true);
-		else
-			FlxG.keys.justReleased.set(key, true);
+	function triggerKey(key:Int, pressed:Bool) {
+    var eventType = pressed ? KeyboardEvent.KEY_DOWN : KeyboardEvent.KEY_UP;
+    var fakeEvent = new KeyboardEvent(eventType, true, false, 0, key);
+    Lib.current.stage.dispatchEvent(fakeEvent);
 	}
-		}
