@@ -9,6 +9,13 @@ import funkin.backend.scripting.events.menu.freeplay.*;
 import funkin.backend.system.Conductor;
 import funkin.game.HealthIcon;
 import funkin.savedata.FunkinSave;
+import mobile.controls.MobileControls;
+import mobile.controls.MobileControls.UP_DOWN;
+import mobile.controls.MobileControls.LEFT_RIGHT;
+import mobile.controls.MobileControls.FULL;
+import mobile.controls.MobileControls.NONE;
+import mobile.controls.MobileControls.A_B;
+import mobile.controls.MobileControls.A_B_X_Y;
 
 using StringTools;
 
@@ -110,7 +117,10 @@ class FreeplayState extends MusicBeatState
 	 */
 	public var interpColor:FlxInterpolateColor;
 
-
+	function addMobile(dpad:Int, actions:Int)
+{
+	add(new MobileControls(dpad, actions));
+}
 	override function create()
 	{
 		CoolUtil.playMenuSong();
@@ -132,6 +142,8 @@ class FreeplayState extends MusicBeatState
 		updateCurSong();
 
 		DiscordUtil.call("onMenuLoaded", ["Freeplay"]);
+
+		addMobile(FULL, A_B_X_Y);
 
 		super.create();
 
