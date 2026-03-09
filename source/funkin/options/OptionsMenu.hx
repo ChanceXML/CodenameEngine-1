@@ -5,6 +5,13 @@ import flixel.util.typeLimit.OneOfThree;
 import funkin.editors.ui.UIState;
 import funkin.options.categories.*;
 import funkin.options.type.*;
+import mobile.controls.MobileControls;
+import mobile.controls.MobileControls.UP_DOWN;
+import mobile.controls.MobileControls.LEFT_RIGHT;
+import mobile.controls.MobileControls.FULL;
+import mobile.controls.MobileControls.NONE;
+import mobile.controls.MobileControls.A_B;
+import mobile.controls.MobileControls.A_B_X_Y;
 
 typedef OptionCategory = {
 	var name:String;
@@ -54,6 +61,11 @@ class OptionsMenu extends TreeMenu {
 	var bg:FlxSprite;
 	var debugOption:TextOption;
 
+	function addMobile(dpad:Int, actions:Int)
+{
+	add(new MobileControls(dpad, actions));
+}
+
 	override function create() {
 		super.create();
 
@@ -65,6 +77,8 @@ class OptionsMenu extends TreeMenu {
 		bg.antialiasing = true;
 		bg.scrollFactor.set();
 		updateBG();
+
+		addMobile(UP_DOWN, A_B);
 
 		for (i in mainOptions) if (i.name == "optionsTree.language-name" && Flags.DISABLE_LANGUAGES) mainOptions.remove(i);
 
