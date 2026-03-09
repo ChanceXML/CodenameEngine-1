@@ -1,7 +1,6 @@
 name: Android Builds
 
 on:
-  push:
   workflow_dispatch:
 
 jobs:
