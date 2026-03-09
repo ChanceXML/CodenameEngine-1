@@ -66,8 +66,6 @@ class StoryMenuState extends MusicBeatState {
 		loadXMLs();
 		persistentUpdate = persistentDraw = true;
 
-		addMobile(FULL, A_B);
-
 		// WEEK INFO
 		blackBar = new FlxSprite(0, 0).makeSolid(FlxG.width, 56, 0xFFFFFFFF);
 		blackBar.color = 0xFF000000;
@@ -85,6 +83,8 @@ class StoryMenuState extends MusicBeatState {
 		weekBG.updateHitbox();
 
 		weekSprites = new FlxTypedGroup<MenuItem>();
+
+		addMobile(FULL, A_B_X_Y)
 
 		// DUMBASS ARROWS
 		var assets = Paths.getFrames('menus/storymenu/assets');
