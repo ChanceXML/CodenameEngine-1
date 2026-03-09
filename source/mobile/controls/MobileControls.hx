@@ -1,9 +1,10 @@
 package mobile.controls;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.group.FlxGroup;
-import flixel.FlxCamera;
+import flixel.ui.FlxButton;
+import flixel.input.keyboard.FlxKey;
+import flixel.input.keyboard.FlxKeyboard;
 
 class MobileControls extends FlxGroup
 {
@@ -16,39 +17,31 @@ class MobileControls extends FlxGroup
 	public static inline var A_B:Int = 0;
 	public static inline var A_B_X_Y:Int = 1;
 
-	var cam:FlxCamera;
-
-	public function new(dpad:Int, actions:Int, camera:FlxCamera)
+	public function new(dpad:Int, actions:Int)
 	{
 		super();
-		cam = camera;
 
 		createDpad(dpad);
 		createActions(actions);
 	}
 
-	function createButton(x:Float, y:Float, img:String, key:Int)
+	function createButton(x:Float, y:Float, img:String, key:FlxKey)
 	{
-		var btn = new FlxSprite(x, y);
+		var btn = new FlxButton(x, y);
 		btn.loadGraphic("assets/images/mobile/buttons/" + img + ".png");
-
-		btn.scrollFactor.set();
-		btn.cameras = [cam];
 
 		btn.alpha = 0.5;
 
-		btn.update = function(elapsed:Float)
+		btn.onDown.callback = function()
 		{
-			if (FlxG.mouse.overlaps(btn) && FlxG.mouse.pressed)
-			{
-				btn.alpha = 0.9;
-				FlxG.keys.press(key);
-			}
-			else
-			{
-				btn.alpha = 0.5;
-				FlxG.keys.release(key);
-			}
+			btn.alpha = 0.9;
+			triggerKey(key, true);
+		};
+
+		btn.onUp.callback = function()
+		{
+			btn.alpha = 0.5;
+			triggerKey(key, false);
 		};
 
 		add(btn);
@@ -60,65 +53,20 @@ class MobileControls extends FlxGroup
 		{
 			case UP_DOWN:
 
-				createButton(
-					80,
-					FlxG.height - 260,
-					"UP",
-					FlxG.keys.UP
-				);
-
-				createButton(
-					80,
-					FlxG.height - 140,
-					"DOWN",
-					FlxG.keys.DOWN
-				);
+				createButton(80, FlxG.height - 260, "UP", FlxKey.UP);
+				createButton(80, FlxG.height - 140, "DOWN", FlxKey.DOWN);
 
 			case LEFT_RIGHT:
 
-				createButton(
-					20,
-					FlxG.height - 180,
-					"LEFT",
-					FlxG.keys.LEFT
-				);
-
-				createButton(
-					140,
-					FlxG.height - 180,
-					"RIGHT",
-					FlxG.keys.RIGHT
-				);
+				createButton(20, FlxG.height - 180, "LEFT", FlxKey.LEFT);
+				createButton(140, FlxG.height - 180, "RIGHT", FlxKey.RIGHT);
 
 			case FULL:
 
-				createButton(
-					80,
-					FlxG.height - 260,
-					"UP",
-					FlxG.keys.UP
-				);
-
-				createButton(
-					20,
-					FlxG.height - 180,
-					"LEFT",
-					FlxG.keys.LEFT
-				);
-
-				createButton(
-					140,
-					FlxG.height - 180,
-					"RIGHT",
-					FlxG.keys.RIGHT
-				);
-
-				createButton(
-					80,
-					FlxG.height - 100,
-					"DOWN",
-					FlxG.keys.DOWN
-				);
+				createButton(80, FlxG.height - 260, "UP", FlxKey.UP);
+				createButton(20, FlxG.height - 180, "LEFT", FlxKey.LEFT);
+				createButton(140, FlxG.height - 180, "RIGHT", FlxKey.RIGHT);
+				createButton(80, FlxG.height - 100, "DOWN", FlxKey.DOWN);
 		}
 	}
 
@@ -130,49 +78,23 @@ class MobileControls extends FlxGroup
 
 			case A_B:
 
-				createButton(
-					FlxG.width - 200,
-					FlxG.height - 160,
-					"A",
-					FlxG.keys.ENTER
-				);
-
-				createButton(
-					FlxG.width - 100,
-					FlxG.height - 160,
-					"B",
-					FlxG.keys.BACKSPACE
-				);
+				createButton(FlxG.width - 200, FlxG.height - 160, "A", FlxKey.ENTER);
+				createButton(FlxG.width - 100, FlxG.height - 160, "B", FlxKey.BACKSPACE);
 
 			case A_B_X_Y:
 
-				createButton(
-					FlxG.width - 200,
-					FlxG.height - 260,
-					"Y",
-					FlxG.keys.TAB
-				);
-
-				createButton(
-					FlxG.width - 100,
-					FlxG.height - 260,
-					"X",
-					FlxG.keys.SEVEN
-				);
-
-				createButton(
-					FlxG.width - 200,
-					FlxG.height - 140,
-					"A",
-					FlxG.keys.ENTER
-				);
-
-				createButton(
-					FlxG.width - 100,
-					FlxG.height - 140,
-					"B",
-					FlxG.keys.BACKSPACE
-				);
+				createButton(FlxG.width - 200, FlxG.height - 260, "Y", FlxKey.TAB);
+				createButton(FlxG.width - 100, FlxG.height - 260, "X", FlxKey.SEVEN);
+				createButton(FlxG.width - 200, FlxG.height - 140, "A", FlxKey.ENTER);
+				createButton(FlxG.width - 100, FlxG.height - 140, "B", FlxKey.BACKSPACE);
 		}
+	}
+
+	function triggerKey(key:FlxKey, pressed:Bool)
+	{
+		if (pressed)
+			FlxG.keys.press(key);
+		else
+			FlxG.keys.release(key);
 	}
 		}
