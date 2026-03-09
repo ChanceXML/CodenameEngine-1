@@ -62,18 +62,18 @@ class MobileControls extends FlxGroup
 	switch(type)
 	{
 		case UP_DOWN:
-			createButton(120, 460, "UP", FlxKey.UP);
-			createButton(120, 600, "DOWN", FlxKey.DOWN);
+			createButton(-545, 135, "UP", FlxKey.UP);
+			createButton(-545, 285, "DOWN", FlxKey.DOWN);
 
 		case LEFT_RIGHT:
-			createButton(40, 540, "LEFT", FlxKey.LEFT);
-			createButton(200, 540, "RIGHT", FlxKey.RIGHT);
+			createButton(-545, 285, "LEFT", FlxKey.LEFT);
+			createButton(-400, 285, "RIGHT", FlxKey.RIGHT);
 
 		case FULL:
-			createButton(120, 460, "UP", FlxKey.UP);
-			createButton(40, 540, "LEFT", FlxKey.LEFT);
-			createButton(200, 540, "RIGHT", FlxKey.RIGHT);
-			createButton(120, 620, "DOWN", FlxKey.DOWN);
+			createButton(-440, 60, "UP", FlxKey.UP);
+			createButton(-555, 155, "LEFT", FlxKey.LEFT);
+			createButton(-320, 155, "RIGHT", FlxKey.RIGHT);
+			createButton(-440, 295, "DOWN", FlxKey.DOWN);
 	}
 }
 
@@ -84,14 +84,14 @@ function createActions(type:Int)
 		case NONE:
 
 		case A_B:
-			createButton(1040, 560, "A", FlxKey.ENTER);
-			createButton(1160, 480, "B", FlxKey.BACKSPACE);
+			createButton(375, 285, "A", FlxKey.ENTER);
+			createButton(525, 285, "B", FlxKey.BACKSPACE);
 
 		case A_B_X_Y:
-			createButton(1040, 460, "Y", FlxKey.TAB);
-			createButton(1160, 540, "X", FlxKey.SEVEN);
-			createButton(1040, 620, "A", FlxKey.ENTER);
-			createButton(1160, 460, "B", FlxKey.BACKSPACE);
+			createButton(375, 135, "Y", FlxKey.TAB);
+			createButton(525, 135, "X", FlxKey.SEVEN);
+			createButton(375, 285, "A", FlxKey.ENTER);
+			createButton(525, 285, "B", FlxKey.BACKSPACE);
 	}
 	}
 
