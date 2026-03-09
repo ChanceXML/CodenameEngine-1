@@ -74,7 +74,7 @@ class MobileControls extends FlxGroup
 				createButton(177.5, 582.5, "RIGHT", FlxKey.RIGHT);
 
 			case FULL:
-				createButton(137.5, 387.5, "UP", FlxKey.UP);
+				createButton(137.5, 377.5, "UP", FlxKey.UP);
 				createButton(22.5, 482.5, "LEFT", FlxKey.LEFT);
 				createButton(257.5, 482.5, "RIGHT", FlxKey.RIGHT);
 				createButton(137.5, 592.5, "DOWN", FlxKey.DOWN);
