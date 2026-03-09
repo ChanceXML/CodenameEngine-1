@@ -1,4 +1,4 @@
-package mobile.controls;
+package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -7,8 +7,11 @@ import flixel.FlxCamera;
 
 class MobileControls extends FlxGroup
 {
-	public static inline var UP_DOWN = 0;
-	public static inline var FULL = 1;
+	public static inline var UP_DOWN:Int = 0;
+	public static inline var FULL:Int = 1;
+
+	public static inline var A_B:Int = 0;
+	public static inline var A_B_X_Y:Int = 1;
 
 	var cam:FlxCamera;
 
@@ -21,9 +24,9 @@ class MobileControls extends FlxGroup
 		createActions(actions);
 	}
 
-	function createButton(x:Float, y:Float, img:String, key:Int)
+	function createButton(x:Float,y:Float,img:String,key:Int)
 	{
-		var btn = new FlxSprite(x, y);
+		var btn = new FlxSprite(x,y);
 		btn.loadGraphic("assets/images/mobile/buttons/" + img + ".png");
 
 		btn.scrollFactor.set();
@@ -52,14 +55,14 @@ class MobileControls extends FlxGroup
 		switch(type)
 		{
 			case UP_DOWN:
-				createButton(80, FlxG.height - 220, "UP", FlxG.keys.UP);
-				createButton(80, FlxG.height - 110, "DOWN", FlxG.keys.DOWN);
+				createButton(80,FlxG.height-220,"UP",FlxG.keys.UP);
+				createButton(80,FlxG.height-110,"DOWN",FlxG.keys.DOWN);
 
 			case FULL:
-				createButton(80, FlxG.height - 220, "UP", FlxG.keys.UP);
-				createButton(0, FlxG.height - 160, "LEFT", FlxG.keys.LEFT);
-				createButton(160, FlxG.height - 160, "RIGHT", FlxG.keys.RIGHT);
-				createButton(80, FlxG.height - 110, "DOWN", FlxG.keys.DOWN);
+				createButton(80,FlxG.height-220,"UP",FlxG.keys.UP);
+				createButton(0,FlxG.height-160,"LEFT",FlxG.keys.LEFT);
+				createButton(160,FlxG.height-160,"RIGHT",FlxG.keys.RIGHT);
+				createButton(80,FlxG.height-110,"DOWN",FlxG.keys.DOWN);
 		}
 	}
 
@@ -67,15 +70,15 @@ class MobileControls extends FlxGroup
 	{
 		switch(type)
 		{
-			case UP_DOWN:
-				createButton(FlxG.width - 200, FlxG.height - 160, "A", FlxG.keys.ENTER);
-				createButton(FlxG.width - 100, FlxG.height - 160, "B", FlxG.keys.BACKSPACE);
+			case A_B:
+				createButton(FlxG.width-200,FlxG.height-160,"A",FlxG.keys.ENTER);
+				createButton(FlxG.width-100,FlxG.height-160,"B",FlxG.keys.BACKSPACE);
 
-			case FULL:
-				createButton(FlxG.width - 200, FlxG.height - 220, "Y", FlxG.keys.TAB);
-				createButton(FlxG.width - 100, FlxG.height - 220, "X", FlxG.keys.SEVEN);
-				createButton(FlxG.width - 200, FlxG.height - 110, "A", FlxG.keys.ENTER);
-				createButton(FlxG.width - 100, FlxG.height - 110, "B", FlxG.keys.BACKSPACE);
+			case A_B_X_Y:
+				createButton(FlxG.width-200,FlxG.height-220,"Y",FlxG.keys.TAB);
+				createButton(FlxG.width-100,FlxG.height-220,"X",FlxG.keys.SEVEN);
+				createButton(FlxG.width-200,FlxG.height-110,"A",FlxG.keys.ENTER);
+				createButton(FlxG.width-100,FlxG.height-110,"B",FlxG.keys.BACKSPACE);
 		}
 	}
 }
