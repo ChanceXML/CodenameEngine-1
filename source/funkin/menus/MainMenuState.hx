@@ -9,6 +9,13 @@ import funkin.backend.scripting.events.NameEvent;
 import funkin.menus.credits.CreditsMain;
 import funkin.options.OptionsMenu;
 import lime.app.Application;
+import mobile.controls.MobileControls;
+import mobile.controls.MobileControls.UP_DOWN;
+import mobile.controls.MobileControls.LEFT_RIGHT;
+import mobile.controls.MobileControls.FULL;
+import mobile.controls.MobileControls.NONE;
+import mobile.controls.MobileControls.A_B;
+import mobile.controls.MobileControls.A_B_X_Y;
 
 using StringTools;
 
@@ -28,6 +35,11 @@ class MainMenuState extends MusicBeatState
 	var devModeWarning:FunkinText;
 
 	public var canAccessDebugMenus:Bool = !Flags.DISABLE_EDITORS;
+	
+	function addMobile(dpad:Int, actions:Int)
+{
+	add(new MobileControls(dpad, actions, camHUD));
+}
 
 	override function create()
 	{
@@ -48,6 +60,8 @@ class MainMenuState extends MusicBeatState
 		magenta.visible = false;
 		magenta.color = 0xFFfd719b;
 		add(magenta);
+
+		addMobile(UP_DOWN, A_B_X_Y);
 
 		for(bg in [bg, magenta]) {
 			bg.scrollFactor.set(0, 0.18);
