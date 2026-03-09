@@ -15,6 +15,13 @@ import funkin.editors.charter.Charter;
 import funkin.menus.StoryMenuState;
 import funkin.options.OptionsMenu;
 import funkin.options.keybinds.KeybindsOptions;
+import mobile.controls.MobileControls;
+import mobile.controls.MobileControls.UP_DOWN;
+import mobile.controls.MobileControls.LEFT_RIGHT;
+import mobile.controls.MobileControls.FULL;
+import mobile.controls.MobileControls.NONE;
+import mobile.controls.MobileControls.A_B;
+import mobile.controls.MobileControls.A_B_X_Y;
 
 class PauseSubState extends MusicBeatSubstate
 {
@@ -40,6 +47,10 @@ class PauseSubState extends MusicBeatSubstate
 
 	private var __cancelDefault:Bool = false;
 
+	function addMobile(dpad:Int, actions:Int)
+{
+	add(new MobileControls(dpad, actions));
+}
 	public function new(?items:Array<String>, ?selectCall:NameEvent->Void) {
 		super();
 		menuItems = items != null ? items : Flags.DEFAULT_PAUSE_ITEMS.copy();
@@ -50,6 +61,8 @@ class PauseSubState extends MusicBeatSubstate
 	override function create()
 	{
 		super.create();
+
+		addMobile(UP_DOWN, A_B);
 
 		if (menuItems.contains("Exit to charter") && !PlayState.chartingMode)
 			menuItems.remove("Exit to charter");
