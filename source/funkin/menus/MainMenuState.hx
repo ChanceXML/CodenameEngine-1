@@ -38,7 +38,7 @@ class MainMenuState extends MusicBeatState
 	
 	function addMobile(dpad:Int, actions:Int)
 {
-	add(new MobileControls(dpad, actions, camHUD));
+	add(new MobileControls(dpad, actions));
 }
 
 	override function create()
