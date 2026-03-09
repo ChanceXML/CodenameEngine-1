@@ -14,6 +14,13 @@ import funkin.backend.week.*;
 import funkin.savedata.FunkinSave;
 import haxe.io.Path;
 import haxe.xml.Access;
+import mobile.controls.MobileControls;
+import mobile.controls.MobileControls.UP_DOWN;
+import mobile.controls.MobileControls.LEFT_RIGHT;
+import mobile.controls.MobileControls.FULL;
+import mobile.controls.MobileControls.NONE;
+import mobile.controls.MobileControls.A_B;
+import mobile.controls.MobileControls.A_B_X_Y;
 
 class StoryMenuState extends MusicBeatState {
 	public var characters:Map<String, WeekData.WeekCharacter> = [];
@@ -49,10 +56,17 @@ class StoryMenuState extends MusicBeatState {
 
 	//public var charFrames:Map<String, FlxFramesCollection> = [];
 
+	function addMobile(dpad:Int, actions:Int)
+{
+	add(new MobileControls(dpad, actions));
+}
+
 	public override function create() {
 		super.create();
 		loadXMLs();
 		persistentUpdate = persistentDraw = true;
+
+		addMobile(FULL, A_B);
 
 		// WEEK INFO
 		blackBar = new FlxSprite(0, 0).makeSolid(FlxG.width, 56, 0xFFFFFFFF);
