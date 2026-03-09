@@ -6,6 +6,13 @@ import flixel.util.FlxColor;
 import funkin.backend.assets.ModsFolder;
 import haxe.io.Path;
 import sys.FileSystem;
+import mobile.controls.MobileControls;
+import mobile.controls.MobileControls.UP_DOWN;
+import mobile.controls.MobileControls.LEFT_RIGHT;
+import mobile.controls.MobileControls.FULL;
+import mobile.controls.MobileControls.NONE;
+import mobile.controls.MobileControls.A_B;
+import mobile.controls.MobileControls.A_B_X_Y;
 
 class ModSwitchMenu extends MusicBeatSubstate {
 	var mods:Array<String> = [];
@@ -14,6 +21,10 @@ class ModSwitchMenu extends MusicBeatSubstate {
 
 	var subCam:FlxCamera;
 
+	function addMobile(dpad:Int, actions:Int)
+{
+	add(new MobileControls(dpad, actions));
+}
 	public override function create() {
 		super.create();
 
@@ -31,6 +42,8 @@ class ModSwitchMenu extends MusicBeatSubstate {
 
 		mods = ModsFolder.getModsList();
 		mods.push(null);
+
+		addMobile(UP_DOWN, A_B);
 
 		alphabets = new FlxTypedGroup<Alphabet>();
 		for(mod in mods) {
