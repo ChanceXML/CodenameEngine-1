@@ -58,41 +58,41 @@ class MobileControls extends FlxGroup
 	}
 
 	function createDpad(type:Int)
+{
+	switch(type)
 	{
-		switch(type)
-		{
-			case UP_DOWN:
-				createButton(80, FlxG.height - 260, "UP", FlxKey.UP);
-				createButton(80, FlxG.height - 140, "DOWN", FlxKey.DOWN);
+		case UP_DOWN:
+			createButton(120, 460, "UP", FlxKey.UP);
+			createButton(120, 600, "DOWN", FlxKey.DOWN);
 
-			case LEFT_RIGHT:
-				createButton(20, FlxG.height - 180, "LEFT", FlxKey.LEFT);
-				createButton(140, FlxG.height - 180, "RIGHT", FlxKey.RIGHT);
+		case LEFT_RIGHT:
+			createButton(40, 540, "LEFT", FlxKey.LEFT);
+			createButton(200, 540, "RIGHT", FlxKey.RIGHT);
 
-			case FULL:
-				createButton(80, FlxG.height - 260, "UP", FlxKey.UP);
-				createButton(20, FlxG.height - 180, "LEFT", FlxKey.LEFT);
-				createButton(140, FlxG.height - 180, "RIGHT", FlxKey.RIGHT);
-				createButton(80, FlxG.height - 100, "DOWN", FlxKey.DOWN);
-		}
+		case FULL:
+			createButton(120, 460, "UP", FlxKey.UP);
+			createButton(40, 540, "LEFT", FlxKey.LEFT);
+			createButton(200, 540, "RIGHT", FlxKey.RIGHT);
+			createButton(120, 620, "DOWN", FlxKey.DOWN);
 	}
+}
 
-	function createActions(type:Int)
+function createActions(type:Int)
+{
+	switch(type)
 	{
-		switch(type)
-		{
-			case NONE:
-                
-			case A_B:
-				createButton(FlxG.width - 200, FlxG.height - 160, "A", FlxKey.ENTER);
-				createButton(FlxG.width - 100, FlxG.height - 160, "B", FlxKey.BACKSPACE);
+		case NONE:
 
-			case A_B_X_Y:
-				createButton(FlxG.width - 200, FlxG.height - 260, "Y", FlxKey.TAB);
-				createButton(FlxG.width - 100, FlxG.height - 260, "X", FlxKey.SEVEN);
-				createButton(FlxG.width - 200, FlxG.height - 140, "A", FlxKey.ENTER);
-				createButton(FlxG.width - 100, FlxG.height - 140, "B", FlxKey.BACKSPACE);
-		}
+		case A_B:
+			createButton(1040, 560, "A", FlxKey.ENTER);
+			createButton(1160, 480, "B", FlxKey.BACKSPACE);
+
+		case A_B_X_Y:
+			createButton(1040, 460, "Y", FlxKey.TAB);
+			createButton(1160, 540, "X", FlxKey.SEVEN);
+			createButton(1040, 620, "A", FlxKey.ENTER);
+			createButton(1160, 460, "B", FlxKey.BACKSPACE);
+	}
 	}
 
 	function triggerKey(key:FlxKey, pressed:Bool)
