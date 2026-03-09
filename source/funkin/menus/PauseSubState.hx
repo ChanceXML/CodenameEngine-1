@@ -62,8 +62,6 @@ class PauseSubState extends MusicBeatSubstate
 	{
 		super.create();
 
-		addMobile(UP_DOWN, A_B);
-
 		if (menuItems.contains("Exit to charter") && !PlayState.chartingMode)
 			menuItems.remove("Exit to charter");
 
@@ -93,6 +91,8 @@ class PauseSubState extends MusicBeatSubstate
 		bg.screenCenter();
 		bg.scrollFactor.set();
 		add(bg);
+
+		addMobile(UP_DOWN, A_B);
 
 		var multiplayerInfo:String = PlayState.opponentMode ? 'pause.opponentMode' :
 									 PlayState.coopMode ? 'pause.coopMode' :
