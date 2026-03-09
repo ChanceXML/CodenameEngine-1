@@ -6,6 +6,7 @@ import flixel.ui.FlxButton;
 import flixel.input.keyboard.FlxKey;
 import openfl.events.KeyboardEvent;
 import openfl.Lib;
+import flixel.FlxCamera;
 
 class MobileControls extends FlxGroup
 {
