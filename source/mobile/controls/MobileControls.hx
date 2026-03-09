@@ -3,8 +3,6 @@ package mobile.controls;
 import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.ui.FlxButton;
-import flixel.input.keyboard.FlxKey;
-import flixel.input.FlxInput;
 
 class MobileControls extends FlxGroup
 {
@@ -20,24 +18,28 @@ class MobileControls extends FlxGroup
 	public function new(dpad:Int, actions:Int)
 	{
 		super();
-
 		createDpad(dpad);
 		createActions(actions);
 	}
 
-	function pressKey(key:FlxKey, down:Bool)
+	function pressKey(key:String, down:Bool)
 	{
-		var input:FlxInput<FlxKey> = FlxG.keys.get(key);
+		switch(key)
+		{
+			case "LEFT": FlxG.keys.pressed.LEFT = down;
+			case "RIGHT": FlxG.keys.pressed.RIGHT = down;
+			case "UP": FlxG.keys.pressed.UP = down;
+			case "DOWN": FlxG.keys.pressed.DOWN = down;
 
-		if (input == null) return;
+			case "ACCEPT": FlxG.keys.pressed.ENTER = down;
+			case "BACK": FlxG.keys.pressed.BACKSPACE = down;
 
-		if (down)
-			input.press();
-		else
-			input.release();
+			case "DEBUG": FlxG.keys.pressed.SEVEN = down;
+			case "RESET": FlxG.keys.pressed.R = down;
+		}
 	}
 
-	function createButton(x:Float, y:Float, img:String, key:FlxKey)
+	function createButton(x:Float, y:Float, img:String, key:String)
 	{
 		var btn = new FlxButton(x, y);
 		btn.loadGraphic("assets/images/mobile/buttons/" + img + ".png");
@@ -66,18 +68,21 @@ class MobileControls extends FlxGroup
 		switch(type)
 		{
 			case UP_DOWN:
-				createButton(80, FlxG.height - 260, "UP", FlxKey.UP);
-				createButton(80, FlxG.height - 140, "DOWN", FlxKey.DOWN);
+
+				createButton(80, FlxG.height - 260, "UP", "UP");
+				createButton(80, FlxG.height - 140, "DOWN", "DOWN");
 
 			case LEFT_RIGHT:
-				createButton(20, FlxG.height - 180, "LEFT", FlxKey.LEFT);
-				createButton(140, FlxG.height - 180, "RIGHT", FlxKey.RIGHT);
+
+				createButton(20, FlxG.height - 180, "LEFT", "LEFT");
+				createButton(140, FlxG.height - 180, "RIGHT", "RIGHT");
 
 			case FULL:
-				createButton(80, FlxG.height - 260, "UP", FlxKey.UP);
-				createButton(20, FlxG.height - 180, "LEFT", FlxKey.LEFT);
-				createButton(140, FlxG.height - 180, "RIGHT", FlxKey.RIGHT);
-				createButton(80, FlxG.height - 100, "DOWN", FlxKey.DOWN);
+
+				createButton(80, FlxG.height - 260, "UP", "UP");
+				createButton(20, FlxG.height - 180, "LEFT", "LEFT");
+				createButton(140, FlxG.height - 180, "RIGHT", "RIGHT");
+				createButton(80, FlxG.height - 100, "DOWN", "DOWN");
 		}
 	}
 
@@ -88,14 +93,16 @@ class MobileControls extends FlxGroup
 			case NONE:
 
 			case A_B:
-				createButton(FlxG.width - 200, FlxG.height - 160, "A", FlxKey.ENTER);
-				createButton(FlxG.width - 100, FlxG.height - 160, "B", FlxKey.BACKSPACE);
+
+				createButton(FlxG.width - 200, FlxG.height - 160, "A", "ACCEPT");
+				createButton(FlxG.width - 100, FlxG.height - 160, "B", "BACK");
 
 			case A_B_X_Y:
-				createButton(FlxG.width - 200, FlxG.height - 260, "Y", FlxKey.TAB);
-				createButton(FlxG.width - 100, FlxG.height - 260, "X", FlxKey.SEVEN);
-				createButton(FlxG.width - 200, FlxG.height - 140, "A", FlxKey.ENTER);
-				createButton(FlxG.width - 100, FlxG.height - 140, "B", FlxKey.BACKSPACE);
+
+				createButton(FlxG.width - 200, FlxG.height - 260, "Y", "RESET");
+				createButton(FlxG.width - 100, FlxG.height - 260, "X", "DEBUG");
+				createButton(FlxG.width - 200, FlxG.height - 140, "A", "ACCEPT");
+				createButton(FlxG.width - 100, FlxG.height - 140, "B", "BACK");
 		}
 	}
 		}
