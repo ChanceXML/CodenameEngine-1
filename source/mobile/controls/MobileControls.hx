@@ -6,109 +6,111 @@ import flixel.ui.FlxButton;
 import flixel.input.keyboard.FlxKey;
 import openfl.events.KeyboardEvent;
 import openfl.Lib;
-import haxe.Timer;
 
 class MobileControls extends FlxGroup
 {
-	public static inline var NONE:Int = -1;
+    public var buttonCam:FlxCamera;
 
-	public static inline var UP_DOWN:Int = 0;
-	public static inline var LEFT_RIGHT:Int = 1;
-	public static inline var FULL:Int = 2;
+    public static inline var NONE:Int = -1;
+    public static inline var UP_DOWN:Int = 0;
+    public static inline var LEFT_RIGHT:Int = 1;
+    public static inline var FULL:Int = 2;
 
-	public static inline var A_B:Int = 0;
-	public static inline var A_B_X_Y:Int = 1;
+    public static inline var A_B:Int = 0;
+    public static inline var A_B_X_Y:Int = 1;
 
-	public function new(dpad:Int, actions:Int)
-	{
-		super();
+    public function new(dpad:Int, actions:Int)
+    {
+        super();
 
-		createDpad(dpad);
-		createActions(actions);
-	}
+        buttonCam = new FlxCamera(0, 0, FlxG.width, FlxG.height);
+        buttonCam.scroll.set(0,0);
+        buttonCam.bgColor = 0x00000000;
 
-	function createButton(x:Float, y:Float, img:String, key:FlxKey)
-	{
-		var btn = new FlxButton(x, y);
-		btn.loadGraphic("assets/images/mobile/buttons/" + img + ".png");
+        if(!FlxG.cameras.list.contains(buttonCam))
+            FlxG.cameras.add(buttonCam);
 
-		btn.alpha = 0.5;
+        FlxCamera.defaultCameras = [FlxG.camera];
 
-		var isPressed:Bool = false;
+        createDpad(dpad);
+        createActions(actions);
+    }
 
-		btn.onDown.callback = function()
-		{
-			if (isPressed) return;
-			isPressed = true;
+    function createButton(x:Float, y:Float, img:String, key:Int)
+    {
+        var btn = new FlxButton(x, y);
+        btn.loadGraphic("assets/images/mobile/buttons/" + img + ".png");
+        btn.alpha = 0.5;
 
-			btn.alpha = 0.9;
-			
-			triggerKey(key, true);
+        btn.cameras = [buttonCam];
 
-			Timer.delay(function() {
-				triggerKey(key, false);
-			}, 50);
-		};
+        var isPressed:Bool = false;
+        btn.onDown.callback = function()
+        {
+            if(isPressed) return;
+            isPressed = true;
+            btn.alpha = 0.9;
+            triggerKey(key, true);
+            triggerKey(key, false);
+        };
 
-		btn.onUp.callback = function()
-		{
-			btn.alpha = 0.5;
-			Timer.delay(function() {
-				isPressed = false;
-			}, 100);
-		};
-        
-		btn.onOut.callback = function()
-		{
-			btn.alpha = 0.5;
-			isPressed = false;
-		};
+        btn.onUp.callback = function()
+        {
+            isPressed = false;
+            btn.alpha = 0.5;
+        };
 
-		add(btn);
-	}
+        btn.onOut.callback = function()
+        {
+            isPressed = false;
+            btn.alpha = 0.5;
+        };
 
-	function createDpad(type:Int)
-	{
-		switch(type)
-		{
-			case UP_DOWN:
-				createButton(32.5, 432.5, "UP", FlxKey.UP);
-				createButton(32.5, 582.5, "DOWN", FlxKey.DOWN);
+        add(btn);
+    }
 
-			case LEFT_RIGHT:
-				createButton(32.5, 582.5, "LEFT", FlxKey.LEFT);
-				createButton(177.5, 582.5, "RIGHT", FlxKey.RIGHT);
+    function createDpad(type:Int)
+    {
+        switch(type)
+        {
+            case UP_DOWN:
+                createButton(-545, 135, "UP", FlxKey.UP);
+                createButton(-545, 285, "DOWN", FlxKey.DOWN);
 
-			case FULL:
-				createButton(137.5, 387.5, "UP", FlxKey.UP);
-				createButton(22.5, 482.5, "LEFT", FlxKey.LEFT);
-				createButton(257.5, 482.5, "RIGHT", FlxKey.RIGHT);
-				createButton(137.5, 592.5, "DOWN", FlxKey.DOWN);
-		}
-	}
+            case LEFT_RIGHT:
+                createButton(-545, 285, "LEFT", FlxKey.LEFT);
+                createButton(-400, 285, "RIGHT", FlxKey.RIGHT);
 
-	function createActions(type:Int)
-	{
-		switch(type)
-		{
-			case NONE:
+            case FULL:
+                createButton(-440, 60, "UP", FlxKey.UP);
+                createButton(-555, 155, "LEFT", FlxKey.LEFT);
+                createButton(-320, 155, "RIGHT", FlxKey.RIGHT);
+                createButton(-440, 295, "DOWN", FlxKey.DOWN);
+        }
+    }
 
-			case A_B:
-				createButton(982.5, 582.5, "A", FlxKey.ENTER);
-				createButton(1132.5, 582.5, "B", FlxKey.BACKSPACE);
+    function createActions(type:Int)
+    {
+        switch(type)
+        {
+            case NONE:
 
-			case A_B_X_Y:
-				createButton(982.5, 432.5, "Y", FlxKey.TAB);
-				createButton(1135.5, 432.5, "X", FlxKey.SEVEN);
-				createButton(982.5, 582.5, "A", FlxKey.ENTER);
-				createButton(1132.5, 582.5, "B", FlxKey.BACKSPACE);
-		}
-	}
+            case A_B:
+                createButton(375, 285, "A", FlxKey.ENTER);
+                createButton(525, 285, "B", FlxKey.BACKSPACE);
 
-	function triggerKey(key:FlxKey, pressed:Bool)
-	{
-		var eventType = pressed ? KeyboardEvent.KEY_DOWN : KeyboardEvent.KEY_UP;
-		var fakeEvent = new KeyboardEvent(eventType, true, false, 0, key);
-		Lib.current.stage.dispatchEvent(fakeEvent);
-	}
+            case A_B_X_Y:
+                createButton(375, 135, "Y", FlxKey.TAB);
+                createButton(525, 135, "X", FlxKey.SEVEN);
+                createButton(375, 285, "A", FlxKey.ENTER);
+                createButton(525, 285, "B", FlxKey.BACKSPACE);
+        }
+    }
+
+    function triggerKey(key:Int, pressed:Bool)
+    {
+        var eventType = pressed ? KeyboardEvent.KEY_DOWN : KeyboardEvent.KEY_UP;
+        var fakeEvent = new KeyboardEvent(eventType, true, false, 0, key);
+        Lib.current.stage.dispatchEvent(fakeEvent);
+    }
 		}
