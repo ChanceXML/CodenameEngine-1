@@ -68,12 +68,6 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
-
-		#if android
-        if (!Environment.isExternalStorageManager()) {
-        Settings.requestSetting("android.settings.MANAGE_APP_ALL_FILES_ACCESS_PERMISSION");
-        }
-        #end
 			
 		instance = this;
 
