@@ -55,10 +55,12 @@ class StoryMenuState extends MusicBeatState {
 	public var characterSprites:FlxTypedGroup<FunkinSprite>;
 
 	//public var charFrames:Map<String, FlxFramesCollection> = [];
-
+	
 	function addMobile(dpad:Int, actions:Int)
 {
-	add(new MobileControls(dpad, actions));
+    var buttonCam = new FlxCamera(0, 0, 1280, 720);
+    FlxG.cameras.add(buttonCam);
+    add(new MobileControls(dpad, actions, buttonCam));
 }
 
 	public override function create() {
@@ -83,9 +85,7 @@ class StoryMenuState extends MusicBeatState {
 		weekBG.updateHitbox();
 
 		weekSprites = new FlxTypedGroup<MenuItem>();
-
-		buttonCam = new FlxCamera(0, 0, 1280, 720);
-        FlxG.cameras.add(buttonCam);
+		
         addMobile(FULL, A_B_X_Y, buttonCam);
 
 		// DUMBASS ARROWS
