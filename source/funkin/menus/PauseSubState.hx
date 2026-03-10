@@ -49,8 +49,11 @@ class PauseSubState extends MusicBeatSubstate
 
 	function addMobile(dpad:Int, actions:Int)
 {
-	add(new MobileControls(dpad, actions));
+    var buttonCam = new FlxCamera(0, 0, 1280, 720);
+    FlxG.cameras.add(buttonCam);
+    add(new MobileControls(dpad, actions, buttonCam));
 }
+	
 	public function new(?items:Array<String>, ?selectCall:NameEvent->Void) {
 		super();
 		menuItems = items != null ? items : Flags.DEFAULT_PAUSE_ITEMS.copy();
