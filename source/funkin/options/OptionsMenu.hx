@@ -78,7 +78,9 @@ class OptionsMenu extends TreeMenu {
 		bg.scrollFactor.set();
 		updateBG();
 
-		addMobile(UP_DOWN, A_B);
+		buttonCam = new FlxCamera(0, 0, 1280, 720);
+        FlxG.cameras.add(buttonCam);
+        addMobile(FULL, A_B, buttonCam);
 
 		for (i in mainOptions) if (i.name == "optionsTree.language-name" && Flags.DISABLE_LANGUAGES) mainOptions.remove(i);
 
