@@ -117,11 +117,10 @@ class FreeplayState extends MusicBeatState
 	 */
 	public var interpColor:FlxInterpolateColor;
 
-	function addMobile(dpad:Int, actions:Int)
-{
-    var buttonCam = new FlxCamera(0, 0, 1280, 720);
-    FlxG.cameras.add(buttonCam);
-    add(new MobileControls(dpad, actions, buttonCam));
+	function addMobile(dpad:Int, actions:Int, cam:FlxCamera)
+    {
+        add(new MobileControls(dpad, actions, cam));
+    }
 }
 	
 	override function create()
@@ -159,7 +158,11 @@ class FreeplayState extends MusicBeatState
 		grpSongs = new FlxTypedGroup<Alphabet>();
 		add(grpSongs);
 
-        addMobile(FULL, A_B_X_Y);
+        buttonCam = new FlxCamera(0, 0, 1280, 720);
+        buttonCam.scroll.set(0, 0);
+        FlxG.cameras.add(buttonCam);
+
+        addMobile(FULL, A_B_X_Y, buttonCam);
 
 		for (i in 0...songs.length)
 		{
