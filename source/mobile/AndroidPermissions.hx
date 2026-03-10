@@ -16,22 +16,25 @@ class StorageUtil
 		if (AndroidVersion.SDK_INT >= AndroidVersionCode.TIRAMISU)
 		{
 			AndroidPermissions.requestPermissions([
-				"READ_MEDIA_IMAGES",
-				"READ_MEDIA_VIDEO",
-				"READ_MEDIA_AUDIO"
+				"android.permission.READ_MEDIA_IMAGES",
+				"android.permission.READ_MEDIA_VIDEO",
+				"android.permission.READ_MEDIA_AUDIO"
 			]);
 		}
 		else
 		{
 			AndroidPermissions.requestPermissions([
-				"READ_EXTERNAL_STORAGE",
-				"WRITE_EXTERNAL_STORAGE"
+				"android.permission.READ_EXTERNAL_STORAGE",
+				"android.permission.WRITE_EXTERNAL_STORAGE"
 			]);
 		}
 
-		if (!AndroidEnvironment.isExternalStorageManager())
+		if (AndroidVersion.SDK_INT >= AndroidVersionCode.R)
 		{
-			AndroidSettings.requestSetting("MANAGE_APP_ALL_FILES_ACCESS_PERMISSION");
+			if (!AndroidEnvironment.isExternalStorageManager())
+			{
+				AndroidSettings.requestSetting("MANAGE_APP_ALL_FILES_ACCESS_PERMISSION");
+			}
 		}
 	}
 	#end
