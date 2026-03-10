@@ -23,8 +23,11 @@ class ModSwitchMenu extends MusicBeatSubstate {
 
 	function addMobile(dpad:Int, actions:Int)
 {
-	add(new MobileControls(dpad, actions));
+    var buttonCam = new FlxCamera(0, 0, 1280, 720);
+    FlxG.cameras.add(buttonCam);
+    add(new MobileControls(dpad, actions, buttonCam));
 }
+	
 	public override function create() {
 		super.create();
 
