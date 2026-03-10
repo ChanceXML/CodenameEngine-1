@@ -86,7 +86,7 @@ class StoryMenuState extends MusicBeatState {
 
 		weekSprites = new FlxTypedGroup<MenuItem>();
 		
-        addMobile(FULL, A_B_X_Y, buttonCam);
+        addMobile(FULL, A_B_X_Y);
 
 		// DUMBASS ARROWS
 		var assets = Paths.getFrames('menus/storymenu/assets');
