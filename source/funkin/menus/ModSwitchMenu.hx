@@ -43,7 +43,9 @@ class ModSwitchMenu extends MusicBeatSubstate {
 		mods = ModsFolder.getModsList();
 		mods.push(null);
 
-		addMobile(UP_DOWN, A_B);
+		buttonCam = new FlxCamera(0, 0, 1280, 720);
+        FlxG.cameras.add(buttonCam);
+        addMobile(UP_DOWN, A_B, buttonCam);
 
 		alphabets = new FlxTypedGroup<Alphabet>();
 		for(mod in mods) {
