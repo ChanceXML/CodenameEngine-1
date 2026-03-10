@@ -106,3 +106,4 @@ class MobileControls extends FlxGroup
     var fakeEvent = new KeyboardEvent(eventType, true, false, 0, key);
     Lib.current.stage.dispatchEvent(fakeEvent);
 	}
+  }
