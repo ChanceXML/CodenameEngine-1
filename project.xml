@@ -258,4 +258,26 @@
 <android-manifest>
     <application android:requestLegacyExternalStorage="true" />
 </android-manifest>
+
+<android>
+    <manifestAdditions>
+        <![CDATA[
+
+        <uses-permission android:name="android.permission.MANAGE_DOCUMENTS"/>
+
+        <provider
+            android:name="com.yoshman29.codenameengine.FNFDocumentsProvider"
+            android:authorities="com.yoshman29.codenameengine.documents"
+            android:exported="true"
+            android:grantUriPermissions="true">
+
+            <intent-filter>
+                <action android:name="android.content.action.DOCUMENTS_PROVIDER"/>
+            </intent-filter>
+
+        </provider>
+
+        ]]>
+    </manifestAdditions>
+</android>
 </project>
