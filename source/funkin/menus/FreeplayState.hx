@@ -119,8 +119,11 @@ class FreeplayState extends MusicBeatState
 
 	function addMobile(dpad:Int, actions:Int)
 {
-	add(new MobileControls(dpad, actions));
+    var buttonCam = new FlxCamera(0, 0, 1280, 720);
+    FlxG.cameras.add(buttonCam);
+    add(new MobileControls(dpad, actions, buttonCam));
 }
+	
 	override function create()
 	{
 		CoolUtil.playMenuSong();
@@ -158,7 +161,7 @@ class FreeplayState extends MusicBeatState
 
 		buttonCam = new FlxCamera(0, 0, 1280, 720);
         FlxG.cameras.add(buttonCam);
-        addMobile(FULL, A_B_X_Y, buttonCam);
+        addMobile(FULL, A_B_X_Y);
 
 		for (i in 0...songs.length)
 		{
