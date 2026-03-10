@@ -28,7 +28,7 @@ public class FNFDocumentsProvider extends DocumentsProvider {
 
         result.newRow()
             .add("fnf_root")
-            .add("FNF Data Folder")
+            .add("Codename Data Folder")
             .add(DocumentsContract.Root.FLAG_SUPPORTS_CREATE)
             .add("fnf_root");
 
