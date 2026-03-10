@@ -61,7 +61,9 @@ class MainMenuState extends MusicBeatState
 		magenta.color = 0xFFfd719b;
 		add(magenta);
 
-		addMobile(UP_DOWN, A_B_X_Y);
+		buttonCam = new FlxCamera(0, 0, 1280, 720);
+        FlxG.cameras.add(buttonCam);
+        addMobile(FULL, A_B_X_Y, buttonCam);
 
 		for(bg in [bg, magenta]) {
 			bg.scrollFactor.set(0, 0.18);
