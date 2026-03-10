@@ -159,8 +159,6 @@ class FreeplayState extends MusicBeatState
 		grpSongs = new FlxTypedGroup<Alphabet>();
 		add(grpSongs);
 
-		buttonCam = new FlxCamera(0, 0, 1280, 720);
-        FlxG.cameras.add(buttonCam);
         addMobile(FULL, A_B_X_Y);
 
 		for (i in 0...songs.length)
