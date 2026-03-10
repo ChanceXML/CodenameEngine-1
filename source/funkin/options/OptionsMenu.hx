@@ -63,7 +63,9 @@ class OptionsMenu extends TreeMenu {
 
 	function addMobile(dpad:Int, actions:Int)
 {
-	add(new MobileControls(dpad, actions));
+    var buttonCam = new FlxCamera(0, 0, 1280, 720);
+    FlxG.cameras.add(buttonCam);
+    add(new MobileControls(dpad, actions, buttonCam));
 }
 
 	override function create() {
@@ -78,9 +80,7 @@ class OptionsMenu extends TreeMenu {
 		bg.scrollFactor.set();
 		updateBG();
 
-		buttonCam = new FlxCamera(0, 0, 1280, 720);
-        FlxG.cameras.add(buttonCam);
-        addMobile(FULL, A_B, buttonCam);
+        addMobile(FULL, A_B);
 
 		for (i in mainOptions) if (i.name == "optionsTree.language-name" && Flags.DISABLE_LANGUAGES) mainOptions.remove(i);
 
