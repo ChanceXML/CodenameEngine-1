@@ -95,9 +95,7 @@ class PauseSubState extends MusicBeatSubstate
 		bg.scrollFactor.set();
 		add(bg);
 
-		buttonCam = new FlxCamera(0, 0, 1280, 720);
-        FlxG.cameras.add(buttonCam);
-        addMobile(UP_DOWN, A_B, buttonCam);
+        addMobile(UP_DOWN, A_B);
 
 		var multiplayerInfo:String = PlayState.opponentMode ? 'pause.opponentMode' :
 									 PlayState.coopMode ? 'pause.coopMode' :
